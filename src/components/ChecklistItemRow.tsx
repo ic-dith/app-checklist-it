@@ -143,7 +143,7 @@ export function ChecklistItemRow({
         {/* Descrizione (Salvataggio automatico) */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`desc-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 block font-bold">
-            Descrizione
+            Description
           </label>
           <textarea
             id={`desc-input-${item.id}`}
@@ -158,7 +158,7 @@ export function ChecklistItemRow({
         {/* Note temporanee (Non salvate) */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor={`note-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block font-bold">
-            Note di sessione
+            Note
           </label>
           <div className="relative">
             <textarea
