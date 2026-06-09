@@ -160,8 +160,9 @@ async function startServer() {
     }
   });
 
-  // Start Vite dev server in development mode
-  if (process.env.NODE_ENV !== "production") {
+  // Start Vite dev server in development mode only if not in production and dist/index.html does not exist
+  const isProduction = process.env.NODE_ENV === "production" || fs.existsSync(path.join(process.cwd(), "dist", "index.html"));
+  if (!isProduction) {
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
