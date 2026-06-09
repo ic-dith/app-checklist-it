@@ -1,6 +1,0 @@
-{
-  "name": "Checklist App",
-  "description": "A checklist manager to build checklists, fill temporary session notes, and generate detailed final completion reports.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
