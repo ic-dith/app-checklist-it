@@ -1,0 +1,8 @@
+export const CATEGORIES_XML_RAW = `<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+  <category>General</category>
+  <category>Daily Routine</category>
+  <category>Work &amp; Tech</category>
+  <category>Health &amp; Wellness</category>
+  <category>Travel &amp; Packing</category>
+</categories>`;
