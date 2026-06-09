@@ -149,7 +149,7 @@ export function ChecklistItemRow({
             id={`desc-input-${item.id}`}
             value={taskState.description || ""}
             onChange={(e) => onUpdateDescription(item.id, e.target.value)}
-            placeholder="Aggiungi la descrizione..."
+            placeholder="description"
             rows={1}
             className="w-full min-h-[44px] py-2 px-3 bg-emerald-50/10 dark:bg-emerald-950/5 border border-emerald-100 dark:border-emerald-900/40 rounded text-sm text-slate-750 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:focus:ring-emerald-700 resize-y placeholder-slate-400"
           />
@@ -165,7 +165,7 @@ export function ChecklistItemRow({
               id={`note-input-${item.id}`}
               value={taskState.note || ""}
               onChange={(e) => onUpdateNote(item.id, e.target.value)}
-              placeholder="Annotazioni temporanee..."
+              placeholder="notes"
               rows={1}
               className="w-full min-h-[44px] py-2 px-3 bg-slate-50 dark:bg-slate-950/15 border border-slate-200 dark:border-slate-850 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-350 dark:focus:ring-slate-750 resize-y placeholder-slate-400"
             />
