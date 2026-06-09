@@ -63,6 +63,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'YOUR_AZURE_WEB_APP_NAME' # REPLACE WITH YOUR AZURE WEB APP NAME
+          app-name: 'app-checklist-ict' # REPLACE WITH YOUR AZURE WEB APP NAME
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Add your Publish Profile to GitHub Secrets
           package: .
