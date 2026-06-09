@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checklist>
-
+  <title>ICT Checklist</title>
+  <subtitle>Operational Safety Checklist Template &amp; Audit</subtitle>
+  <item>
+    <id>item-1781012273812-hsmno33uz</id>
+    <text>AZ-001 - Check scadenze reservation VMs</text>
+    <category>azure</category>
+    <description>subscriptions Moresi + UMB</description>
+  </item>
+  <item>
+    <id>item-1781012288270-6wxu2nfpf</id>
+    <text>AZ-002 - Check budget tetto massimo</text>
+    <category>azure</category>
+    <description>subscriptions Moresi + UMB</description>
+  </item>
+  <item>
+    <id>item-1781012292755-zh1g55yrs</id>
+    <text>AZ-003 - Check alert rules scadenza</text>
+    <category>azure</category>
+    <description>subscriptions Moresi + UMB</description>
+  </item>
+  <item>
+    <id>item-1781012297433-zrnwdg8pz</id>
+    <text>AZ-004 - Enterprise app scadenze ENTRAID</text>
+    <category>azure</category>
+    <description></description>
+  </item>
 </checklist>

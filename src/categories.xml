@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <categories>
-  <category>General</category>
-  <category>Daily Routine</category>
-  <category>Work &amp; Tech</category>
-  <category>Health &amp; Wellness</category>
-  <category>Travel &amp; Packing</category>
+  <category>azure</category>
+  <category>general</category>
+  <category>paloalto</category>
+  <category>governance</category>
+  <category>infrastucture</category>
+  <category>pki</category>
+  <category>github</category>
 </categories>
