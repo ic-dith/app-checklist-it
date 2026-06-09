@@ -165,7 +165,7 @@ export function ChecklistItemRow({
               id={`note-input-${item.id}`}
               value={taskState.note || ""}
               onChange={(e) => onUpdateNote(item.id, e.target.value)}
-              placeholder="Annotazioni temporanee per questo report..."
+              placeholder="Annotazioni temporanee..."
               rows={1}
               className="w-full min-h-[44px] py-2 px-3 bg-slate-50 dark:bg-slate-950/15 border border-slate-200 dark:border-slate-850 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-350 dark:focus:ring-slate-750 resize-y placeholder-slate-400"
             />
