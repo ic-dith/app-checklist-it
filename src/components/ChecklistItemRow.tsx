@@ -53,7 +53,7 @@ export function ChecklistItemRow({
             onClick={() => onToggleComplete(item.id)}
             className={`mt-1 w-5 h-5 shrink-0 rounded-md border flex items-center justify-center transition-all cursor-pointer ${
               taskState.isCompleted
-                ? "bg-indigo-650 border-indigo-650 text-white shadow-xs"
+                ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
                 : "border-slate-350 dark:border-slate-700 hover:border-slate-500 bg-white dark:bg-slate-950 focus:ring-1 focus:ring-indigo-500"
             }`}
             aria-label={`Mark task completed: ${item.text}`}

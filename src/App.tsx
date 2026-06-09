@@ -986,7 +986,7 @@ export default function App() {
                     title="Upload local .xml template to run"
                   />
                   <div className="flex flex-col items-center gap-2 text-center pointer-events-none">
-                    <Upload className="w-6 h-6 text-indigo-650" />
+                    <Upload className="w-6 h-6 text-indigo-600" />
                     <span className="text-sm font-bold text-slate-850 dark:text-slate-200">
                       Upload Custom XML Template
                     </span>
@@ -1013,7 +1013,7 @@ export default function App() {
                         id="download-all-zip-btn"
                         type="button"
                         onClick={saveAndDownloadZip}
-                        className="flex justify-center items-center gap-2.5 py-3 px-4 bg-indigo-650 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-xs hover:shadow-md"
+                        className="flex justify-center items-center gap-2.5 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm hover:shadow-md"
                         title="Download a single ZIP archive containing all 3 modified XML files"
                       >
                         <Download className="w-4 h-4" />
@@ -1081,7 +1081,7 @@ export default function App() {
 
                 <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                   <div 
-                    className="bg-indigo-650 h-full rounded-full transition-all duration-300"
+                    className="bg-indigo-600 h-full rounded-full transition-all duration-300"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
