@@ -688,8 +688,10 @@ export function ReportView({
 
           {/* Footer of report */}
           <div className="border-t border-slate-250 dark:border-slate-800 pt-5 mt-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] text-slate-400 dark:text-slate-600 font-mono px-6 pb-2">
+            {/*
             <p className="whitespace-nowrap">Verification Audit System • ClearTask</p>
             <p className="text-center sm:text-right">Notes and Annotations Saved to Storage</p>
+            */}
           </div>
 
         </div>
