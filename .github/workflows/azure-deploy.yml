@@ -4,10 +4,11 @@ name: Build and Deploy to Azure Web App
 on:
   push:
     branches:
-      - main  # Trigger workflow on push to main branch
+      - main
   workflow_dispatch:
 
 permissions:
+  id-token: write
   contents: read
 
 jobs:
@@ -31,7 +32,6 @@ jobs:
         run: npm run build
 
       - name: Package artifacts
-        # Package the workspace so that the server has access to runtime file reading/writing (e.g. XML files inside src/)
         run: |
           zip -r release.zip . -x "node_modules/*" ".git/*" ".github/*" "dist/**/*.map"
 
@@ -44,8 +44,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+
     environment:
-      name: 'production'
+      name: production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -59,10 +60,16 @@ jobs:
           unzip release.zip
           rm release.zip
 
-      - name: 'Deploy to Azure Web App'
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'app-checklist-ict' # REPLACE WITH YOUR AZURE WEB APP NAME
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Add your Publish Profile to GitHub Secrets
+          app-name: app-checklist-ict
           package: .
