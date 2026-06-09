@@ -149,7 +149,7 @@ export function ChecklistItemRow({
             id={`desc-input-${item.id}`}
             value={taskState.description || ""}
             onChange={(e) => onUpdateDescription(item.id, e.target.value)}
-            placeholder="Aggiungi qui dettagli, passi seguiti o risultanze stabili..."
+            placeholder="Aggiungi la descrizione..."
             rows={1}
             className="w-full min-h-[44px] py-2 px-3 bg-emerald-50/10 dark:bg-emerald-950/5 border border-emerald-100 dark:border-emerald-900/40 rounded text-sm text-slate-750 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:focus:ring-emerald-700 resize-y placeholder-slate-400"
           />
