@@ -4,26 +4,107 @@
   <subtitle>Operational Safety Checklist Template &amp; Audit</subtitle>
   <item>
     <id>item-1781012273812-hsmno33uz</id>
-    <text>AZ-001 - Check scadenze reservation VMs</text>
+    <text>Check scadenze reservation VMs</text>
     <category>azure</category>
     <description>subscriptions Moresi + UMB</description>
   </item>
   <item>
     <id>item-1781012288270-6wxu2nfpf</id>
-    <text>AZ-002 - Check budget tetto massimo</text>
+    <text>Check budget tetto massimo</text>
     <category>azure</category>
     <description>subscriptions Moresi + UMB</description>
   </item>
   <item>
     <id>item-1781012292755-zh1g55yrs</id>
-    <text>AZ-003 - Check alert rules scadenza</text>
+    <text>Check alert rules scadenza</text>
     <category>azure</category>
     <description>subscriptions Moresi + UMB</description>
   </item>
   <item>
     <id>item-1781012297433-zrnwdg8pz</id>
-    <text>AZ-004 - Enterprise app scadenze ENTRAID</text>
+    <text>Enterprise app scadenze ENTRAID</text>
     <category>azure</category>
     <description></description>
+  </item>
+  <item>
+    <id>item-1781079865689-9c36ywl8h</id>
+    <text>Check MasterKey PaloAlto scadenza</text>
+    <category>paloalto</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781079871599-684aun80m</id>
+    <text>Check scadenze certificate PaloAlto</text>
+    <category>paloalto</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781079877099-pzo8hj006</id>
+    <text>Backup PaloAlto config.</text>
+    <category>paloalto</category>
+    <description>\\srvch202\Users\Information Technology\Infrastructure\Backup Config Device\PA3220-HQ</description>
+  </item>
+  <item>
+    <id>item-1781079920237-jax5iyrpm</id>
+    <text>Check certificati vSphere</text>
+    <category>infrastucture</category>
+    <description>vSphere &gt; Administration &gt; Certificate mgmt
+</description>
+  </item>
+  <item>
+    <id>item-1781079933309-wfceiycwj</id>
+    <text>Check licenze Kemp LAN</text>
+    <category>infrastucture</category>
+    <description>SRVCHB91
+</description>
+  </item>
+  <item>
+    <id>item-1781079943865-h1i6sst3i</id>
+    <text>Check licenze Kemp DMZ</text>
+    <category>infrastucture</category>
+    <description>SRVCHB90
+</description>
+  </item>
+  <item>
+    <id>item-1781079957401-3gh2fxk40</id>
+    <text>Digicert: scadenze certificati (subscriptions e legacy)</text>
+    <category>pki</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781079963381-9ht1y8a16</id>
+    <text>Digicert: scadenze domini</text>
+    <category>pki</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781079968957-7puzqp2xq</id>
+    <text>Digicert: scadenze validazioni organizzazioni</text>
+    <category>pki</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781079974165-yf0f3i0rz</id>
+    <text>file excel scadenze certificati</text>
+    <category>pki</category>
+    <description>../../../_layouts/15/Doc.aspx?sourcedoc=%7BF9105FFD-C32B-44FC-9B3E-2207B8E9493E%7D&amp;file=SSL_Certificates_Inventory.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</description>
+  </item>
+  <item>
+    <id>item-1781079996068-2h4bqghls</id>
+    <text>Enterprise App secrets/certificate</text>
+    <category>github</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781080001327-1s435jeko</id>
+    <text>Fine-grained token Commvault</text>
+    <category>github</category>
+    <description></description>
+  </item>
+  <item>
+    <id>item-1781080012080-m2jw3d12w</id>
+    <text>Task Clickup aggiunta commento esito in activity</text>
+    <category>governance</category>
+    <description>allegato file pdf report generato da questa app</description>
   </item>
 </checklist>
