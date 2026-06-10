@@ -442,8 +442,8 @@ export function ReportView({
   ${tableHTML}
 
   <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; margin-top: 40px; display: flex; justify-content: space-between; padding-left: 12px; padding-right: 12px; font-size: 10px; font-family: monospace; color: #94a3b8;">
-    <div>Verification Audit System • ClearTask</div>
-    <div>Notes field in-memory (not saved to storage)</div>
+    // <div>Verification Audit System • ClearTask</div>
+    // <div>Notes field in-memory (not saved to storage)</div>
   </div>
 
   <script>
