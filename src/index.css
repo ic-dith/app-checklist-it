@@ -36,6 +36,11 @@
 
 /* Print specific styles to ensure completion report looks gorgeous on paper or save-to-pdf without gray background or empty second page overflows */
 @media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
   html, body, #root, #root > div, [class*="bg-slate-"], [class*="dark:bg-slate-"], #main-container, #report-overlay {
     background-color: #ffffff !important;
     background: #ffffff !important;

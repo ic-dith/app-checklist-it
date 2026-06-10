@@ -165,13 +165,13 @@ export function ReportView({
           
           let rowBgColorStyle = "";
           if (state?.status === "ok") {
-            rowBgColorStyle = "background-color: #f0fdf4;";
+            rowBgColorStyle = "background-color: #f0fdf4 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;";
           } else if (state?.status === "warning") {
-            rowBgColorStyle = "background-color: #fefce8;";
+            rowBgColorStyle = "background-color: #fefce8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;";
           } else if (state?.status === "error") {
-            rowBgColorStyle = "background-color: #fef2f2;";
+            rowBgColorStyle = "background-color: #fef2f2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;";
           } else if (isComp) {
-            rowBgColorStyle = "background-color: #f8fafc;";
+            rowBgColorStyle = "background-color: #f8fafc !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;";
           }
           
           tableHTML += `
