@@ -1,7 +1,9 @@
-import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshCw } from "lucide-react";
+import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshCw, FileDown } from "lucide-react";
 import { ChecklistItem, SessionTaskState } from "../types";
 import { useState } from "react";
 import { LinkifiedText } from "./LinkifiedText";
+// @ts-ignore
+import html2pdf from "html2pdf.js";
 
 interface ReportViewProps {
   items: ChecklistItem[];
@@ -25,6 +27,7 @@ export function ReportView({
   checkerName
 }: ReportViewProps) {
   const [copied, setCopied] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Math metrics
   const total = items.length;
@@ -93,6 +96,85 @@ export function ReportView({
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const rDay = String(d.getDate()).padStart(2, "0");
     return `${y}${m}${rDay}`;
+  };
+
+  const handleDownloadPDF = () => {
+    setIsGeneratingPDF(true);
+    const element = document.getElementById("report-printable-area");
+    if (!element) {
+      setIsGeneratingPDF(false);
+      return;
+    }
+
+    try {
+      // Create a temporary off-screen container that forces standard light-mode styling
+      const container = document.createElement("div");
+      
+      // Forces white background, dark text, clean styling, and prevents dark mode classes from leaking
+      container.className = "light bg-white text-slate-900 p-8 rounded-none";
+      container.style.position = "absolute";
+      container.style.left = "-9999px";
+      container.style.top = "0";
+      container.style.width = "820px"; // standard A4-sized width for perfect ratio rendering
+      container.style.backgroundColor = "#ffffff";
+      container.style.color = "#1e293b";
+
+      // Clone our report elements
+      const clone = element.cloneNode(true) as HTMLElement;
+
+      // Ensure elements inside don't carry print-hidden styles
+      const printHiddenElements = clone.querySelectorAll(".print\\:hidden");
+      printHiddenElements.forEach(el => el.remove());
+
+      // Ensure that all background classes are explicitly forced to solid light background styles for the canvas engine
+      const allRows = clone.querySelectorAll("tr");
+      allRows.forEach((row) => {
+        if (row.className.includes("bg-emerald-50")) {
+          row.setAttribute("style", "background-color: #f0fdf4 !important;");
+        } else if (row.className.includes("bg-yellow-50")) {
+          row.setAttribute("style", "background-color: #fefce8 !important;");
+        } else if (row.className.includes("bg-red-50")) {
+          row.setAttribute("style", "background-color: #fef2f2 !important;");
+        } else if (row.className.includes("bg-slate-50")) {
+          row.setAttribute("style", "background-color: #f8fafc !important;");
+        }
+      });
+
+      container.appendChild(clone);
+      document.body.appendChild(container);
+
+      // Setup html2pdf parameters
+      const opt = {
+        margin:       10,
+        filename:     `${getYYYYMMDD()} - checklist report.pdf`,
+        image:        { type: "jpeg", quality: 0.98 },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true, 
+          logging: false,
+          scrollY: 0,
+          scrollX: 0
+        },
+        jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+      };
+
+      // @ts-ignore
+      html2pdf().from(container).set(opt).save().then(() => {
+        if (container.parentNode) {
+          document.body.removeChild(container);
+        }
+        setIsGeneratingPDF(false);
+      }).catch((err: any) => {
+        console.error("PDF generation failed:", err);
+        if (container.parentNode) {
+          document.body.removeChild(container);
+        }
+        setIsGeneratingPDF(false);
+      });
+    } catch (e) {
+      console.error("Error generating PDF:", e);
+      setIsGeneratingPDF(false);
+    }
   };
 
   const downloadPrintableHTML = () => {
@@ -517,6 +599,22 @@ export function ReportView({
         </button>
 
         <div className="flex items-center gap-3">
+          <button
+            id="download-pdf-btn"
+            type="button"
+            onClick={handleDownloadPDF}
+            disabled={isGeneratingPDF}
+            className="flex items-center gap-1.5 px-4 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold rounded-lg transition-all cursor-pointer shadow-xs hover:shadow-md"
+            title="Download PDF directly with colors kept intact"
+          >
+            {isGeneratingPDF ? (
+              <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full mr-1" />
+            ) : (
+              <FileDown className="w-3.5 h-3.5" />
+            )}
+            <span>{isGeneratingPDF ? "Generating..." : "Download PDF"}</span>
+          </button>
+
           <button
             id="print-report-btn"
             type="button"
