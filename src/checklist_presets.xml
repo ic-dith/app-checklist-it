@@ -82,7 +82,7 @@
   </item>
   <item>
     <id>item-1781079974165-yf0f3i0rz</id>
-    <text>file excel scadenze certificati</text>
+    <text>File excel scadenze certificati</text>
     <category>pki</category>
     <description>https://dufercosa.sharepoint.com/:x:/r/sites/DSA-InformationTechnologies-InformationServices/_layouts/15/Doc.aspx?sourcedoc=%7BF9105FFD-C32B-44FC-9B3E-2207B8E9493E%7D&amp;file=SSL_Certificates_Inventory.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</description>
   </item>
@@ -102,6 +102,6 @@
     <id>item-1781080012080-m2jw3d12w</id>
     <text>Task Clickup aggiunta commento esito in activity</text>
     <category>governance</category>
-    <description>allegato file pdf report generato da questa app</description>
+    <description>generare file pdf ed allegare al task ClickUp</description>
   </item>
 </checklist>
