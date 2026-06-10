@@ -180,7 +180,7 @@ export function ChecklistItemRow({
       <div className="pl-9 grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
         {/* Descrizione (Salvataggio automatico) */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={`desc-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 block font-bold">
+          <label htmlFor={`desc-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 block font-bold">
             Description
           </label>
           <textarea
@@ -190,10 +190,10 @@ export function ChecklistItemRow({
             onChange={(e) => onUpdateDescription(item.id, e.target.value)}
             placeholder="description"
             rows={1}
-            className="w-full min-h-[44px] py-2 px-3 bg-emerald-50/10 dark:bg-emerald-950/5 border border-emerald-100 dark:border-emerald-900/40 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:focus:ring-emerald-700 resize-none overflow-hidden placeholder-slate-400"
+            className="w-full min-h-[44px] py-2 px-3 bg-blue-50/10 dark:bg-blue-950/5 border border-blue-200 dark:border-blue-900/40 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:focus:ring-blue-700 resize-none overflow-hidden placeholder-slate-400"
           />
           {taskState.description && (/(https?:\/\/[^\s]+)/gi.test(taskState.description) || taskState.description.includes("\\\\")) && (
-            <div className="text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-50/40 dark:bg-emerald-950/20 px-2 py-1 rounded border border-emerald-150/40 mt-1 break-words">
+            <div className="text-[11px] text-blue-700 dark:text-blue-400 bg-blue-50/40 dark:bg-blue-950/20 px-2 py-1 rounded border border-blue-200/40 mt-1 break-words">
               <span className="font-semibold">🌐 Interactive link/path: </span>
               <LinkifiedText text={taskState.description} />
             </div>
@@ -202,7 +202,7 @@ export function ChecklistItemRow({
 
         {/* Note temporanee (Non salvate) */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor={`note-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block font-bold">
+          <label htmlFor={`note-input-${item.id}`} className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 block font-bold">
             Note
           </label>
           <div className="relative">
@@ -213,11 +213,11 @@ export function ChecklistItemRow({
               onChange={(e) => onUpdateNote(item.id, e.target.value)}
               placeholder="notes"
               rows={1}
-              className="w-full min-h-[44px] py-2 px-3 bg-slate-50 dark:bg-slate-950/15 border border-slate-200 dark:border-slate-850 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-350 dark:focus:ring-slate-750 resize-none overflow-hidden placeholder-slate-400"
+              className="w-full min-h-[44px] py-2 px-3 bg-blue-50/10 dark:bg-blue-950/5 border border-blue-200 dark:border-blue-900/40 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:focus:ring-blue-700 resize-none overflow-hidden placeholder-slate-400"
             />
           </div>
           {taskState.note && (/(https?:\/\/[^\s]+)/gi.test(taskState.note) || taskState.note.includes("\\\\")) && (
-            <div className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100/40 dark:bg-slate-900/20 px-2 py-1 rounded border border-slate-200/40 mt-1 break-words">
+            <div className="text-[11px] text-blue-700 dark:text-blue-400 bg-blue-50/40 dark:bg-blue-950/20 px-2 py-1 rounded border border-blue-200/40 mt-1 break-words">
               <span className="font-semibold">🌐 Interactive link/path: </span>
               <LinkifiedText text={taskState.note} />
             </div>
