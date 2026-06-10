@@ -48,22 +48,19 @@
     <id>item-1781079920237-jax5iyrpm</id>
     <text>Check certificati vSphere</text>
     <category>infrastucture</category>
-    <description>vSphere &gt; Administration &gt; Certificate mgmt
-</description>
+    <description>vSphere &gt; Administration &gt; Certificate mgmt</description>
   </item>
   <item>
     <id>item-1781079933309-wfceiycwj</id>
     <text>Check licenze Kemp LAN</text>
     <category>infrastucture</category>
-    <description>SRVCHB91
-</description>
+    <description>SRVCHB91</description>
   </item>
   <item>
     <id>item-1781079943865-h1i6sst3i</id>
     <text>Check licenze Kemp DMZ</text>
     <category>infrastucture</category>
-    <description>SRVCHB90
-</description>
+    <description>SRVCHB90</description>
   </item>
   <item>
     <id>item-1781079957401-3gh2fxk40</id>
@@ -87,7 +84,7 @@
     <id>item-1781079974165-yf0f3i0rz</id>
     <text>file excel scadenze certificati</text>
     <category>pki</category>
-    <description>../../../_layouts/15/Doc.aspx?sourcedoc=%7BF9105FFD-C32B-44FC-9B3E-2207B8E9493E%7D&amp;file=SSL_Certificates_Inventory.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</description>
+    <description>https://dufercosa.sharepoint.com/:x:/r/sites/DSA-InformationTechnologies-InformationServices/_layouts/15/Doc.aspx?sourcedoc=%7BF9105FFD-C32B-44FC-9B3E-2207B8E9493E%7D&amp;file=SSL_Certificates_Inventory.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</description>
   </item>
   <item>
     <id>item-1781079996068-2h4bqghls</id>
