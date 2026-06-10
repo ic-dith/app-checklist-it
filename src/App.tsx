@@ -14,7 +14,9 @@ import {
   Upload,
   FileCode,
   AlertTriangle,
-  Download
+  Download,
+  PanelLeftClose,
+  PanelLeftOpen
 } from "lucide-react";
 import { ChecklistItem, SessionTaskState } from "./types";
 import { DEFAULT_CATEGORIES } from "./data";
@@ -97,6 +99,12 @@ export default function App() {
   // Filtering states
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Collapsible left sidebar control state (collapsed by default)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem("checklist_sidebar_collapsed");
+    return saved !== null ? saved === "true" : true;
+  });
 
   // Keep browser tab title in sync with the current app title
   useEffect(() => {
@@ -961,7 +969,7 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* LEFT COLUMN: Upload, Save, Analytics & Manage Controls (Span 5) */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className={`flex flex-col gap-6 transition-all duration-300 ${sidebarCollapsed ? "hidden lg:hidden" : "lg:col-span-5"}`}>
               
               {/* Primary file loading center */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs flex flex-col gap-5">
@@ -1194,9 +1202,6 @@ export default function App() {
               </div>
 
               {/* Educational info callout */}
-
-              {/*
-              
               <div className="bg-indigo-50/55 dark:bg-slate-900/50 border border-indigo-100/60 dark:border-slate-800/80 p-5 rounded-2xl flex items-start gap-3.5">
                 <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-slate-550 dark:text-slate-400">
@@ -1207,34 +1212,61 @@ export default function App() {
                 </div>
               </div>
 
-              */}
-
             </div>
 
             {/* RIGHT COLUMN: Interactive Checklist Stage (Span 7) */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
+            <div className={`flex flex-col gap-6 transition-all duration-300 ${sidebarCollapsed ? "lg:col-span-12" : "lg:col-span-7"}`}>
               
               {/* Checklist toolbar (Filters & Search) */}
-              <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-xs">
-                {/* Search */}
-                <div className="relative w-full sm:w-64">
-                  <input
-                    id="search-tasks-input"
-                    type="text"
-                    placeholder="Search checklists..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-10 pl-9 pr-3 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-805 dark:text-slate-150 focus:outline-none focus:ring-1 focus:ring-indigo-500 placeholder-slate-400"
-                  />
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Search className="w-3.5 h-3.5" />
+              <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-xs">
+                
+                {/* Search & Collapse buttons container */}
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                  {/* Sidebar Toggle Collapse/Expand Button */}
+                  <button
+                    id="toggle-sidebar-btn"
+                    type="button"
+                    onClick={() => {
+                      const nextCollapsed = !sidebarCollapsed;
+                      setSidebarCollapsed(nextCollapsed);
+                      localStorage.setItem("checklist_sidebar_collapsed", String(nextCollapsed));
+                    }}
+                    className="h-10 px-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 dark:text-slate-400 flex items-center gap-2 text-xs font-semibold shrink-0 cursor-pointer transition-all"
+                    title={sidebarCollapsed ? "Show controls & uploads sidebar" : "Hide controls & uploads sidebar"}
+                  >
+                    {sidebarCollapsed ? (
+                      <>
+                        <PanelLeftOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                        <span className="hidden sm:inline">Show Sidebar</span>
+                      </>
+                    ) : (
+                      <>
+                        <PanelLeftClose className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                        <span className="hidden sm:inline">Hide Sidebar</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Search input field */}
+                  <div className="relative flex-1 md:w-64">
+                    <input
+                      id="search-tasks-input"
+                      type="text"
+                      placeholder="Search checklists..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full h-10 pl-9 pr-3 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-805 dark:text-slate-150 focus:outline-none focus:ring-1 focus:ring-indigo-500 placeholder-slate-400"
+                    />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                      <Search className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
 
                 {/* Categories filtering bar */}
-                <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar py-0.5">
+                <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar py-0.5 justify-end">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0 hidden sm:block" />
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
                     {activeCategories.map((cat) => (
                       <button
                         id={`filter-cat-${cat.replace(/\s+/g, '')}`}
