@@ -1,4 +1,4 @@
-import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshCw, FileDown } from "lucide-react";
+import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshCw } from "lucide-react";
 import { ChecklistItem, SessionTaskState } from "../types";
 import { useState } from "react";
 import { LinkifiedText } from "./LinkifiedText";
@@ -25,7 +25,6 @@ export function ReportView({
   checkerName
 }: ReportViewProps) {
   const [copied, setCopied] = useState(false);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Math metrics
   const total = items.length;
@@ -94,122 +93,6 @@ export function ReportView({
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const rDay = String(d.getDate()).padStart(2, "0");
     return `${y}${m}${rDay}`;
-  };
-
-  // Caricamento dinamico tramite CDN affidabile per evitare problemi di build/installazione su server/GitHub CI
-  const loadHtml2pdf = (): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      if ((window as any).html2pdf) {
-        resolve((window as any).html2pdf);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-      script.integrity = "sha512-GsLlZN/3F2ErC5xS5YGjCVVJKdrEv6yFL13SGzgjhgRe5wWw6Uf0516V079upReaxldS339yi86YY1Alua9Iyw==";
-      script.crossOrigin = "anonymous";
-      script.referrerPolicy = "no-referrer";
-      script.onload = () => {
-        resolve((window as any).html2pdf);
-      };
-      script.onerror = (err) => {
-        reject(err);
-      };
-      document.body.appendChild(script);
-    });
-  };
-
-  const handleDownloadPDF = async () => {
-    setIsGeneratingPDF(true);
-    const element = document.getElementById("report-printable-area");
-    if (!element) {
-      setIsGeneratingPDF(false);
-      return;
-    }
-
-    try {
-      // Carica la libreria in tempo reale
-      const html2pdfLib = await loadHtml2pdf();
-
-      // Crea un contenitore temporaneo isolato con tema chiaro (light-mode)
-      const container = document.createElement("div");
-      container.className = "light bg-white text-slate-900 p-8 rounded-none";
-      container.style.position = "absolute";
-      container.style.left = "-9999px";
-      container.style.top = "0";
-      container.style.width = "820px"; // Larghezza fissa adatta al formato A4
-      container.style.backgroundColor = "#ffffff";
-      container.style.color = "#1e293b";
-
-      // Clona il blocco del report
-      const clone = element.cloneNode(true) as HTMLElement;
-
-      // Forza gli sfondi colorati a livello CSS inline sui rami del clone per preservarli nel canvas
-      const allRows = clone.querySelectorAll("tr");
-      allRows.forEach((row) => {
-        let styleStr = "";
-        const cls = row.className || "";
-
-        if (cls.includes("bg-emerald-50") || cls.includes("bg-emerald-950") || cls.includes("emerald")) {
-          styleStr = "background-color: #f0fdf4 !important;";
-        } else if (cls.includes("bg-yellow-50") || cls.includes("bg-yellow-950") || cls.includes("yellow")) {
-          styleStr = "background-color: #fefce8 !important;";
-        } else if (cls.includes("bg-red-50") || cls.includes("bg-red-950") || cls.includes("red")) {
-          styleStr = "background-color: #fef2f2 !important;";
-        } else if (cls.includes("bg-slate-50") || cls.includes("bg-slate-900") || cls.includes("slate-900/10")) {
-          styleStr = "background-color: #f8fafc !important;";
-        }
-
-        if (styleStr) {
-          row.setAttribute("style", styleStr);
-          const tds = row.querySelectorAll("td");
-          tds.forEach((td) => {
-            td.setAttribute("style", `${td.getAttribute("style") || ""} ${styleStr}`);
-          });
-        }
-      });
-
-      // Rimuovi bordi o ombreggiature dei bottoni ed elimina elementi con classe print:hidden
-      const allButtons = clone.querySelectorAll("button");
-      allButtons.forEach((btn) => {
-        btn.setAttribute("style", "background: transparent !important; border: none !important; outline: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; display: inline !important; color: inherit; font-size: inherit; font-family: inherit;");
-      });
-
-      const printHiddenElements = clone.querySelectorAll(".print\\:hidden, svg.print\\:hidden, button svg");
-      printHiddenElements.forEach(el => el.remove());
-
-      container.appendChild(clone);
-      document.body.appendChild(container);
-
-      // Opzioni di rendering
-      const opt = {
-        margin:       10,
-        filename:     `${getYYYYMMDD()} - checklist report.pdf`,
-        image:        { type: "jpeg", quality: 0.98 },
-        html2canvas:  { 
-          scale: 2, 
-          useCORS: true, 
-          logging: false,
-          scrollY: 0,
-          scrollX: 0
-        },
-        jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
-      };
-
-      await html2pdfLib().from(container).set(opt).save();
-
-      if (container.parentNode) {
-        document.body.removeChild(container);
-      }
-      setIsGeneratingPDF(false);
-    } catch (err) {
-      console.error("PDF download failed:", err);
-      if (onShowAlert) {
-        onShowAlert("Generazione fallita", "Impossibile creare il PDF tramite browser.");
-      } else {
-        alert("Impossibile scaricare il file PDF.");
-      }
-      setIsGeneratingPDF(false);
-    }
   };
 
   const downloadPrintableHTML = () => {
@@ -634,22 +517,6 @@ export function ReportView({
         </button>
 
         <div className="flex items-center gap-3">
-          <button
-            id="download-pdf-btn"
-            type="button"
-            onClick={handleDownloadPDF}
-            disabled={isGeneratingPDF}
-            className="flex items-center gap-1.5 px-4 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold rounded-lg transition-all cursor-pointer shadow-xs hover:shadow-md"
-            title="Download PDF directly with colors kept intact"
-          >
-            {isGeneratingPDF ? (
-              <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full mr-1" />
-            ) : (
-              <FileDown className="w-3.5 h-3.5" />
-            )}
-            <span>{isGeneratingPDF ? "Generating..." : "Download PDF"}</span>
-          </button>
-
           <button
             id="print-report-btn"
             type="button"
