@@ -786,6 +786,23 @@ export default function App() {
   };
 
   const handleUpdateStatus = (id: string, status: "ok" | "warning" | "error" | undefined) => {
+    if (!checkerName || !checkerName.trim()) {
+      triggerAlert(
+        "Operator Name Required",
+        "The operator name is mandatory. Please enter the name of the person performing the check at the top of the page before selecting a status."
+      );
+      
+      // Select and focus the input field for the operator name
+      setTimeout(() => {
+        const input = document.getElementById("checker-name-input-field");
+        if (input) {
+          input.scrollIntoView({ behavior: "smooth", block: "center" });
+          input.focus();
+        }
+      }, 150);
+      return;
+    }
+
     setTaskStates((prev) => {
       const current = prev[id] || { itemId: id, isCompleted: false, note: "", description: "" };
       
@@ -806,13 +823,6 @@ export default function App() {
       syncTicksToStorage(next);
       return next;
     });
-
-    if (status && (!checkerName || !checkerName.trim())) {
-      triggerAlert(
-        "Operator Name Recommended",
-        "You've selected a status! To fully check off this checklist item as completed, please enter the operator name at the top of the page."
-      );
-    }
   };
 
   const handleUpdateDescription = (id: string, description: string) => {
