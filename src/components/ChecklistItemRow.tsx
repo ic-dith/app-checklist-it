@@ -9,6 +9,7 @@ interface ChecklistItemRowProps {
   onToggleComplete: (id: string) => void;
   onUpdateNote: (id: string, note: string) => void;
   onUpdateDescription: (id: string, desc: string) => void;
+  onUpdateStatus: (id: string, status: "ok" | "warning" | "error" | undefined) => void;
   onDeleteTemplateItem: (id: string) => void;
   onEditTemplateItem: (id: string, newText: string) => void;
 }
@@ -19,6 +20,7 @@ export function ChecklistItemRow({
   onToggleComplete,
   onUpdateNote,
   onUpdateDescription,
+  onUpdateStatus,
   onDeleteTemplateItem,
   onEditTemplateItem
 }: ChecklistItemRowProps) {
@@ -67,8 +69,16 @@ export function ChecklistItemRow({
   return (
     <div
       id={`item-row-${item.id}`}
-      className={`group flex flex-col gap-3 p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl transition-all hover:shadow-xs ${
-        taskState.isCompleted ? "border-slate-200 dark:border-slate-700 bg-slate-50/50" : ""
+      className={`group flex flex-col gap-3 p-5 border transition-all hover:shadow-sm relative overflow-hidden rounded-xl ${
+        taskState.status === "ok"
+          ? "border-emerald-450 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/30 text-slate-800 dark:text-slate-100"
+          : taskState.status === "warning"
+          ? "border-orange-400 dark:border-orange-850/70 bg-orange-50/45 dark:bg-orange-950/30 text-slate-800 dark:text-slate-100"
+          : taskState.status === "error"
+          ? "border-yellow-450 dark:border-yellow-800/80 bg-yellow-50/45 dark:bg-yellow-950/25 text-slate-800 dark:text-slate-100"
+          : taskState.isCompleted
+          ? "border-slate-250 dark:border-slate-700 bg-slate-50/50 text-slate-700 dark:text-slate-350"
+          : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300"
       }`}
     >
       {/* Top row: Checkbox, Text, Actions */}
@@ -213,33 +223,74 @@ export function ChecklistItemRow({
             </div>
           )}
           
-          {/* Helper quick tags for notes */}
-          <div className="flex flex-wrap gap-1">
-            {["Checked / OK", "Errors found", "Pending review"].map((tag) => (
+          {/* Status Choice (Mandatory) & Clear */}
+          <div className="flex flex-col gap-1.5 mt-2">
+            <span className="text-[10px] uppercase font-black tracking-wider text-slate-450 dark:text-slate-400 block">
+              Item Status <span className="text-red-500 font-bold">*</span>
+            </span>
+            <div className="flex flex-wrap gap-2 items-center">
               <button
-                id={`quicknote-${item.id}-${tag.replace(/\s+/g, '')}`}
-                key={tag}
+                id={`status-ok-${item.id}`}
                 type="button"
-                onClick={() => {
-                  const current = (taskState.note || "").trim();
-                  const updated = current ? `${current}. ${tag}` : tag;
-                  onUpdateNote(item.id, updated);
-                }}
-                className="text-[10px] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded transition-colors cursor-pointer"
+                onClick={() => onUpdateStatus(item.id, "ok")}
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  taskState.status === "ok"
+                    ? "bg-emerald-500/15 border-emerald-500 text-emerald-700 dark:text-emerald-400 font-extrabold ring-1 ring-emerald-500/40"
+                    : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
+                }`}
               >
-                + {tag}
+                <span className={`w-2 h-2 rounded-full ${taskState.status === "ok" ? "bg-emerald-500" : "bg-emerald-400"}`} />
+                OK
               </button>
-            ))}
-            {taskState.note && (
               <button
-                id={`clearnote-${item.id}`}
+                id={`status-warn-${item.id}`}
                 type="button"
-                onClick={() => onUpdateNote(item.id, "")}
-                className="text-[10px] text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 border border-red-200 dark:border-red-900/40 px-2 py-0.5 rounded transition-colors cursor-pointer"
+                onClick={() => onUpdateStatus(item.id, "warning")}
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  taskState.status === "warning"
+                    ? "bg-orange-500/15 border-orange-500 text-orange-700 dark:text-orange-400 font-extrabold ring-1 ring-orange-500/40"
+                    : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
+                }`}
               >
-                Clear
+                <span className={`w-2 h-2 rounded-full ${taskState.status === "warning" ? "bg-orange-500" : "bg-orange-400"}`} />
+                Warning
               </button>
-            )}
+              <button
+                id={`status-error-${item.id}`}
+                type="button"
+                onClick={() => onUpdateStatus(item.id, "error")}
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                  taskState.status === "error"
+                    ? "bg-yellow-500/15 border-yellow-500 text-yellow-700 dark:text-yellow-400 font-extrabold ring-1 ring-yellow-500/40"
+                    : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${taskState.status === "error" ? "bg-yellow-500" : "bg-yellow-400"}`} />
+                Error
+              </button>
+
+              {taskState.status && (
+                <button
+                  id={`clear-status-${item.id}`}
+                  type="button"
+                  onClick={() => onUpdateStatus(item.id, undefined)}
+                  className="text-[10px] text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 border border-red-200 dark:border-red-900/40 px-2 py-1 rounded transition-colors cursor-pointer ml-auto"
+                >
+                  Clear Status
+                </button>
+              )}
+
+              {taskState.note && (
+                <button
+                  id={`clearnote-${item.id}`}
+                  type="button"
+                  onClick={() => onUpdateNote(item.id, "")}
+                  className="text-[10px] text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 border border-red-200 dark:border-red-900/40 px-2 py-1 rounded transition-colors cursor-pointer"
+                >
+                  Clear Notes
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

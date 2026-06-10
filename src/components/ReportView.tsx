@@ -148,9 +148,17 @@ export function ReportView({
           const isComp = state?.isCompleted;
           const desc = state?.description && state.description.trim() ? linkifyHTML(state.description.trim()) : "";
           const note = state?.note && state.note.trim() ? linkifyHTML(state.note.trim()) : "";
-          const statusText = isComp 
-            ? `<span style="color: #4f46e5; font-weight: 700;">✔ DONE</span>` 
-            : `<span style="color: #94a3b8; font-weight: 700;">— PENDING</span>`;
+          
+          let statusText = `<span style="color: #94a3b8; font-weight: 700;">— PENDING</span>`;
+          if (state?.status === "ok") {
+            statusText = `<span style="color: #10b981; font-weight: 700;">✔ OK</span>`;
+          } else if (state?.status === "warning") {
+            statusText = `<span style="color: #f97316; font-weight: 700;">⚠ WARN</span>`;
+          } else if (state?.status === "error") {
+            statusText = `<span style="color: #ca8a04; font-weight: 700;">✗ ERR</span>`;
+          } else if (isComp) {
+            statusText = `<span style="color: #4f46e5; font-weight: 700;">✔ DONE</span>`;
+          }
           
           tableHTML += `
             <tr style="border-bottom: 1px solid #e2e8f0;">
@@ -669,13 +677,25 @@ export function ReportView({
 
                             return (
                               <tr key={item.id} className="text-xs hover:bg-slate-50/20 dark:hover:bg-slate-900/10 align-top">
-                                <td className="py-4 px-4 font-mono font-bold break-words whitespace-normal">
-                                  {state?.isCompleted ? (
-                                    <span className="inline-flex items-center gap-1 text-indigo-600 font-medium">
+                                <td className="py-3 px-4 font-mono font-bold break-words whitespace-normal align-middle">
+                                  {state?.status === "ok" ? (
+                                    <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/25 px-2 py-0.5 rounded-md border border-emerald-100 dark:border-emerald-900/30 text-[10px] uppercase">
+                                      ✔ OK
+                                    </span>
+                                  ) : state?.status === "warning" ? (
+                                    <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 font-bold bg-orange-50 dark:bg-orange-950/25 px-2 py-0.5 rounded-md border border-orange-100 dark:border-orange-900/30 text-[10px] uppercase">
+                                      ⚠ WARN
+                                    </span>
+                                  ) : state?.status === "error" ? (
+                                    <span className="inline-flex items-center gap-1 text-yellow-600 dark:text-yellow-500 font-bold bg-yellow-50 dark:bg-yellow-950/25 px-2 py-0.5 rounded-md border border-yellow-105/50 dark:border-yellow-900/30 text-[10px] uppercase">
+                                      ✗ ERR
+                                    </span>
+                                  ) : state?.isCompleted ? (
+                                    <span className="inline-flex items-center gap-1 text-indigo-650 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-950/25 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/30 text-[10px] uppercase">
                                       ✔ DONE
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-slate-400 font-medium font-bold">
+                                    <span className="inline-flex items-center gap-1 text-slate-450 dark:text-slate-500 font-bold text-[10px] uppercase">
                                       — PENDING
                                     </span>
                                   )}

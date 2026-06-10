@@ -12,6 +12,7 @@ export interface SessionTaskState {
   description: string; // Saved persistently to localStorage
   note: string; // Transient in-memory only
   checkedBy?: string;
+  status?: "ok" | "warning" | "error";
 }
 
 export interface ChecklistReport {

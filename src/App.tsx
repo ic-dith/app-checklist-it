@@ -333,6 +333,7 @@ export default function App() {
         const isCompleted = typeof val === "object" && val !== null ? !!val.isCompleted : !!val;
         const checkedBy = typeof val === "object" && val !== null ? val.checkedBy : (isCompleted ? "Auditor" : undefined);
         const description = typeof val === "object" && val !== null ? (val.description || "") : (item.description || "");
+        const status = typeof val === "object" && val !== null ? val.status : undefined;
         
         initialStates[item.id] = {
           itemId: item.id,
@@ -340,6 +341,7 @@ export default function App() {
           note: "", // Held strictly in memory
           description,
           checkedBy,
+          status,
         };
       });
       setTaskStates(initialStates);
@@ -415,12 +417,13 @@ export default function App() {
 
   // Sync completion states to localStorage with operator names (excluding notes!)
   const syncTicksToStorage = (updatedStates: Record<string, SessionTaskState>) => {
-    const ticksMap: Record<string, { isCompleted: boolean; checkedBy?: string; description?: string }> = {};
+    const ticksMap: Record<string, { isCompleted: boolean; checkedBy?: string; description?: string; status?: "ok" | "warning" | "error" }> = {};
     Object.keys(updatedStates).forEach((key) => {
       ticksMap[key] = {
         isCompleted: !!updatedStates[key].isCompleted,
         checkedBy: updatedStates[key].checkedBy,
         description: updatedStates[key].description || "",
+        status: updatedStates[key].status,
       };
     });
     localStorage.setItem("checklist_session_ticks", JSON.stringify(ticksMap));
@@ -464,6 +467,7 @@ export default function App() {
             isCompleted: false,
             description: item.description || "",
             note: "",
+            status: undefined,
           };
         });
         setTaskStates(newStates);
@@ -515,6 +519,7 @@ export default function App() {
             isCompleted: false,
             description: item.description || "",
             note: "",
+            status: undefined,
           };
         });
         setTaskStates(newStates);
@@ -743,6 +748,14 @@ export default function App() {
       return;
     }
 
+    if (checkingOn && !currentTask.status) {
+      triggerAlert(
+        "Status Selection Required",
+        "Choosing a status (OK, Warning, or Error) is mandatory before completing or checking off this checklist item."
+      );
+      return;
+    }
+
     setTaskStates((prev) => {
       const current = prev[id] || { itemId: id, isCompleted: false, note: "", description: "" };
       const next = {
@@ -770,6 +783,36 @@ export default function App() {
         },
       };
     });
+  };
+
+  const handleUpdateStatus = (id: string, status: "ok" | "warning" | "error" | undefined) => {
+    setTaskStates((prev) => {
+      const current = prev[id] || { itemId: id, isCompleted: false, note: "", description: "" };
+      
+      const hasOperator = !!checkerName && checkerName.trim().length > 0;
+      const willBeCompleted = !!status && (hasOperator ? true : current.isCompleted);
+      const assignedOperator = !!status && hasOperator ? checkerName.trim() : (status ? current.checkedBy : undefined);
+
+      const next = {
+        ...prev,
+        [id]: {
+          ...current,
+          status,
+          isCompleted: willBeCompleted,
+          checkedBy: assignedOperator,
+        },
+      };
+      
+      syncTicksToStorage(next);
+      return next;
+    });
+
+    if (status && (!checkerName || !checkerName.trim())) {
+      triggerAlert(
+        "Operator Name Recommended",
+        "You've selected a status! To fully check off this checklist item as completed, please enter the operator name at the top of the page."
+      );
+    }
   };
 
   const handleUpdateDescription = (id: string, description: string) => {
@@ -860,8 +903,9 @@ export default function App() {
           resetStates[item.id] = {
             itemId: item.id,
             isCompleted: false,
-            description: item.description || "",
+            description: taskStates[item.id]?.description || item.description || "",
             note: "", // Reset all notes to empty
+            status: undefined,
           };
         });
         setTaskStates(resetStates);
@@ -1345,6 +1389,7 @@ export default function App() {
                         onToggleComplete={handleToggleComplete}
                         onUpdateNote={handleUpdateNote}
                         onUpdateDescription={handleUpdateDescription}
+                        onUpdateStatus={handleUpdateStatus}
                         onDeleteTemplateItem={handleDeleteTemplateItem}
                         onEditTemplateItem={handleEditTemplateItem}
                       />
