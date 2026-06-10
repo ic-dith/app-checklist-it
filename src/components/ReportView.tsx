@@ -176,7 +176,7 @@ export function ReportView({
               <td style="padding: 12px 16px; font-family: monospace; font-size: 11px; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">${statusText}</td>
               <td class="${isComp ? 'line-through' : ''}" style="padding: 12px 16px; font-weight: 500; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${isComp ? 'text-decoration: line-through; color: #94a3b8;' : ''}">${item.text}</td>
               <td style="padding: 12px 16px; font-style: italic; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
-                ${desc ? `<span style="display: block; background-color: #ffffff; border: 1px solid #dcfce7; color: #166534; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
+                ${desc ? `<span style="display: block; color: #334155; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word; line-height: 1.4;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
               <td style="padding: 12px 16px; font-style: italic; color: #64748b; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
                 ${note ? `<span style="display: block; background-color: #ffffff; border: 1px solid #e2e8f0; color: #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
@@ -729,7 +729,7 @@ export function ReportView({
                                 </td>
                                 <td className="py-4 px-4 text-slate-600 dark:text-slate-400 break-words whitespace-normal font-sans">
                                   {hasDesc ? (
-                                    <span className="bg-emerald-50 dark:bg-emerald-950/25 border border-emerald-100 dark:border-emerald-900/30 text-[11px] text-emerald-850 dark:text-emerald-300 px-3 py-2 rounded-lg block font-sans font-medium leading-relaxed break-words whitespace-normal shadow-3xs">
+                                    <span className="text-[11px] text-slate-650 dark:text-slate-300 block font-sans font-medium leading-relaxed break-words whitespace-normal">
                                       <LinkifiedText text={state.description.trim()} />
                                     </span>
                                   ) : (
