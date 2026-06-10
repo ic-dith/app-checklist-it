@@ -1194,6 +1194,8 @@ export default function App() {
               </div>
 
               {/* Educational info callout */}
+              
+              {/*
               <div className="bg-indigo-50/55 dark:bg-slate-900/50 border border-indigo-100/60 dark:border-slate-800/80 p-5 rounded-2xl flex items-start gap-3.5">
                 <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
                 <div className="text-xs text-slate-550 dark:text-slate-400">
@@ -1203,6 +1205,7 @@ export default function App() {
                   </p>
                 </div>
               </div>
+              */}
 
             </div>
 
