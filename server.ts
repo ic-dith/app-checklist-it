@@ -15,29 +15,42 @@ async function startServer() {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     try {
       let commitHash = "";
-      // Try fetching using git CLI
+
+      // 1. Try reading the static commit file written by GitHub Actions during deployment
       try {
-        const { execSync } = require("child_process");
-        commitHash = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim();
-      } catch (e) {
-        // Fallback to manual reading of .git files
+        const commitFilePath = path.join(process.cwd(), "src", "build_commit.txt");
+        if (fs.existsSync(commitFilePath)) {
+          commitHash = fs.readFileSync(commitFilePath, "utf8").trim();
+        }
+      } catch (err) {
+        console.warn("[Server] Failed to read src/build_commit.txt file:", err);
+      }
+
+      // 2. Try fetching using git CLI if local file was not present (local dev environments)
+      if (!commitHash) {
         try {
-          const projectRoot = process.cwd();
-          const headPath = path.join(projectRoot, ".git", "HEAD");
-          if (fs.existsSync(headPath)) {
-            const headContent = fs.readFileSync(headPath, "utf8").trim();
-            if (headContent.startsWith("ref: ")) {
-              const refPath = headContent.substring(5).trim();
-              const fullRefPath = path.join(projectRoot, ".git", refPath);
-              if (fs.existsSync(fullRefPath)) {
-                commitHash = fs.readFileSync(fullRefPath, "utf8").trim().substring(0, 7);
+          const { execSync } = require("child_process");
+          commitHash = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim();
+        } catch (e) {
+          // 3. Fallback to manual reading of .git files
+          try {
+            const projectRoot = process.cwd();
+            const headPath = path.join(projectRoot, ".git", "HEAD");
+            if (fs.existsSync(headPath)) {
+              const headContent = fs.readFileSync(headPath, "utf8").trim();
+              if (headContent.startsWith("ref: ")) {
+                const refPath = headContent.substring(5).trim();
+                const fullRefPath = path.join(projectRoot, ".git", refPath);
+                if (fs.existsSync(fullRefPath)) {
+                  commitHash = fs.readFileSync(fullRefPath, "utf8").trim().substring(0, 7);
+                }
+              } else if (headContent.length >= 7) {
+                commitHash = headContent.substring(0, 7);
               }
-            } else if (headContent.length >= 7) {
-              commitHash = headContent.substring(0, 7);
             }
+          } catch (err) {
+            console.warn("[Server] Fallback git reading failed:", err);
           }
-        } catch (err) {
-          console.warn("[Server] Fallback git reading failed:", err);
         }
       }
 
@@ -51,10 +64,10 @@ async function startServer() {
         }
       } catch {}
 
-      const versionStr = commitHash ? `v. ${pkgVersion}-${commitHash}` : `v. ${pkgVersion}-dev`;
-      return res.json({ version: versionStr, hash: commitHash || "dev" });
+      const versionStr = commitHash ? `v. ${commitHash}` : "";
+      return res.json({ version: versionStr, hash: commitHash || "" });
     } catch (err: any) {
-      return res.json({ version: "v. 1.0.0-unknown", hash: "unknown" });
+      return res.json({ version: "", hash: "" });
     }
   });
 
@@ -324,6 +337,33 @@ async function startServer() {
     console.log(`[Server] Serving static assets from: ${distPath}`);
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
+      try {
+        const htmlPath = path.join(distPath, "index.html");
+        if (fs.existsSync(htmlPath)) {
+          let html = fs.readFileSync(htmlPath, "utf8");
+          
+          // Dynamically read Title from configuration on disk
+          let title = "ClearTask Compliance";
+          const configPath = path.join(process.cwd(), "src", "app_config.xml");
+          if (fs.existsSync(configPath)) {
+            const xml = fs.readFileSync(configPath, "utf8");
+            const match = xml.match(/<title>(.*?)<\/title>/);
+            if (match && match[1]) {
+              title = match[1]
+                .replace(/&amp;/g, "&")
+                .replace(/&lt;/g, "<")
+                .replace(/&gt;/g, ">")
+                .replace(/["']/g, ""); // strip quotes for HTML title safety
+            }
+          }
+          
+          // Inline replacement of title tag for browser and production deployment
+          const updatedHtml = html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`);
+          return res.send(updatedHtml);
+        }
+      } catch (err) {
+        console.warn("[Server] Dynamically replacing title tag inside index.html failed:", err);
+      }
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
