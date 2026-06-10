@@ -225,7 +225,7 @@ export function ChecklistItemRow({
                   const updated = current ? `${current}. ${tag}` : tag;
                   onUpdateNote(item.id, updated);
                 }}
-                className="text-[9px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-250 bg-slate-100/65 hover:bg-slate-200/55 dark:bg-slate-850 dark:hover:bg-slate-800 px-1.5 py-0.5 rounded-sm transition-colors cursor-pointer"
+                className="text-[10px] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded transition-colors cursor-pointer"
               >
                 + {tag}
               </button>
@@ -235,7 +235,7 @@ export function ChecklistItemRow({
                 id={`clearnote-${item.id}`}
                 type="button"
                 onClick={() => onUpdateNote(item.id, "")}
-                className="text-[9px] text-red-500 hover:text-red-650 bg-red-500/10 hover:bg-red-500/20 px-1.5 py-0.5 rounded-sm transition-colors cursor-pointer"
+                className="text-[10px] text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-950/60 border border-red-200 dark:border-red-900/40 px-2 py-0.5 rounded transition-colors cursor-pointer"
               >
                 Clear
               </button>
