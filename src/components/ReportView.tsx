@@ -153,9 +153,9 @@ export function ReportView({
           if (state?.status === "ok") {
             statusText = `<span style="color: #10b981; font-weight: 700;">✔ OK</span>`;
           } else if (state?.status === "warning") {
-            statusText = `<span style="color: #f97316; font-weight: 700;">⚠ WARN</span>`;
+            statusText = `<span style="color: #ca8a04; font-weight: 700;">⚠ WARN</span>`;
           } else if (state?.status === "error") {
-            statusText = `<span style="color: #ca8a04; font-weight: 700;">✗ ERR</span>`;
+            statusText = `<span style="color: #ef4444; font-weight: 700;">✗ ERR</span>`;
           } else if (isComp) {
             statusText = `<span style="color: #4f46e5; font-weight: 700;">✔ DONE</span>`;
           }
@@ -683,11 +683,11 @@ export function ReportView({
                                       ✔ OK
                                     </span>
                                   ) : state?.status === "warning" ? (
-                                    <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400 font-bold bg-orange-50 dark:bg-orange-950/25 px-2 py-0.5 rounded-md border border-orange-100 dark:border-orange-900/30 text-[10px] uppercase">
+                                    <span className="inline-flex items-center gap-1 text-yellow-600 dark:text-yellow-400 font-bold bg-yellow-50 dark:bg-yellow-950/25 px-2 py-0.5 rounded-md border border-yellow-250 dark:border-yellow-900/30 text-[10px] uppercase">
                                       ⚠ WARN
                                     </span>
                                   ) : state?.status === "error" ? (
-                                    <span className="inline-flex items-center gap-1 text-yellow-600 dark:text-yellow-500 font-bold bg-yellow-50 dark:bg-yellow-950/25 px-2 py-0.5 rounded-md border border-yellow-105/50 dark:border-yellow-900/30 text-[10px] uppercase">
+                                    <span className="inline-flex items-center gap-1 text-red-650 dark:text-red-400 font-bold bg-red-50 dark:bg-red-950/25 px-2 py-0.5 rounded-md border border-red-150 dark:border-red-900/30 text-[10px] uppercase">
                                       ✗ ERR
                                     </span>
                                   ) : state?.isCompleted ? (

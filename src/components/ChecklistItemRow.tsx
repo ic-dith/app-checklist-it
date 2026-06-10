@@ -73,9 +73,9 @@ export function ChecklistItemRow({
         taskState.status === "ok"
           ? "border-emerald-450 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/30 text-slate-800 dark:text-slate-100"
           : taskState.status === "warning"
-          ? "border-orange-400 dark:border-orange-850/70 bg-orange-50/45 dark:bg-orange-950/30 text-slate-800 dark:text-slate-100"
+          ? "border-yellow-450 dark:border-yellow-700/80 bg-yellow-50/50 dark:bg-yellow-950/25 text-slate-800 dark:text-slate-100"
           : taskState.status === "error"
-          ? "border-yellow-450 dark:border-yellow-800/80 bg-yellow-50/45 dark:bg-yellow-950/25 text-slate-800 dark:text-slate-100"
+          ? "border-red-400 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/30 text-slate-800 dark:text-slate-100"
           : taskState.isCompleted
           ? "border-slate-250 dark:border-slate-700 bg-slate-50/50 text-slate-700 dark:text-slate-350"
           : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300"
@@ -248,11 +248,11 @@ export function ChecklistItemRow({
                 onClick={() => onUpdateStatus(item.id, "warning")}
                 className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
                   taskState.status === "warning"
-                    ? "bg-orange-500/15 border-orange-500 text-orange-700 dark:text-orange-400 font-extrabold ring-1 ring-orange-500/40"
+                    ? "bg-yellow-500/15 border-yellow-500 text-yellow-700 dark:text-yellow-400 font-extrabold ring-1 ring-yellow-500/40"
                     : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
                 }`}
               >
-                <span className={`w-2 h-2 rounded-full ${taskState.status === "warning" ? "bg-orange-500" : "bg-orange-400"}`} />
+                <span className={`w-2 h-2 rounded-full ${taskState.status === "warning" ? "bg-yellow-500" : "bg-slate-400"}`} />
                 Warning
               </button>
               <button
@@ -261,11 +261,11 @@ export function ChecklistItemRow({
                 onClick={() => onUpdateStatus(item.id, "error")}
                 className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
                   taskState.status === "error"
-                    ? "bg-yellow-500/15 border-yellow-500 text-yellow-700 dark:text-yellow-400 font-extrabold ring-1 ring-yellow-500/40"
+                    ? "bg-red-500/15 border-red-500 text-red-700 dark:text-red-400 font-extrabold ring-1 ring-red-500/40"
                     : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
                 }`}
               >
-                <span className={`w-2 h-2 rounded-full ${taskState.status === "error" ? "bg-yellow-500" : "bg-yellow-400"}`} />
+                <span className={`w-2 h-2 rounded-full ${taskState.status === "error" ? "bg-red-500" : "bg-slate-400"}`} />
                 Error
               </button>
 
