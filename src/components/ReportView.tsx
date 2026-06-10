@@ -102,7 +102,7 @@ export function ReportView({
       const yyyymmdd = getYYYYMMDD();
       const docTitle = `${yyyymmdd} - checklist report`;
 
-      const linkifyHTML = (text: string): string => {
+      const linkifyHTML = (text: string, noBg = false): string => {
         if (!text) return "";
         const urlRegex = /(https?:\/\/[^\s<>""'']+)/gi;
         const uncRegex = /\\\\([^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)(?:\\[^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)+/gi;
@@ -112,6 +112,9 @@ export function ReportView({
         });
         
         result = result.replace(uncRegex, (unc) => {
+          if (noBg) {
+            return `<span style="font-family: monospace; color: #2563eb; word-break: break-all; font-size: 0.9em; display: inline; text-decoration: underline; text-decoration-style: dotted;">${unc}</span>`;
+          }
           return `<span style="font-family: monospace; background-color: #fffbeb; color: #b45309; padding: 2px 6px; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; word-break: break-all; font-size: 0.9em; display: inline-block;">${unc}</span>`;
         });
         
@@ -146,7 +149,7 @@ export function ReportView({
         catItems.forEach(item => {
           const state = taskStates[item.id];
           const isComp = state?.isCompleted;
-          const desc = state?.description && state.description.trim() ? linkifyHTML(state.description.trim()) : "";
+          const desc = state?.description && state.description.trim() ? linkifyHTML(state.description.trim(), true) : "";
           const note = state?.note && state.note.trim() ? linkifyHTML(state.note.trim()) : "";
           
           let statusText = `<span style="color: #94a3b8; font-weight: 700;">— PENDING</span>`;
@@ -730,7 +733,7 @@ export function ReportView({
                                 <td className="py-4 px-4 text-slate-600 dark:text-slate-400 break-words whitespace-normal font-sans">
                                   {hasDesc ? (
                                     <span className="text-[11px] text-slate-650 dark:text-slate-300 block font-sans font-medium leading-relaxed break-words whitespace-normal">
-                                      <LinkifiedText text={state.description.trim()} />
+                                      <LinkifiedText text={state.description.trim()} noBg={true} />
                                     </span>
                                   ) : (
                                     <span className="text-slate-300 dark:text-slate-755 font-mono tracking-wider">—</span>

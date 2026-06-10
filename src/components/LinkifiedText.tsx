@@ -4,6 +4,7 @@ import { Folder, Check, Copy } from "lucide-react";
 interface LinkifiedTextProps {
   text: string;
   className?: string;
+  noBg?: boolean;
 }
 
 interface Token {
@@ -11,7 +12,7 @@ interface Token {
   type: "text" | "url" | "unc";
 }
 
-export function LinkifiedText({ text, className = "" }: LinkifiedTextProps) {
+export function LinkifiedText({ text, className = "", noBg = false }: LinkifiedTextProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   if (!text) return null;
@@ -121,17 +122,20 @@ export function LinkifiedText({ text, className = "" }: LinkifiedTextProps) {
               key={index}
               type="button"
               onClick={(e) => handleCopyUnc(token.text, index, e)}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 border border-amber-200/40 hover:bg-amber-100 dark:hover:bg-amber-900/30 text-[11px] font-mono transition-all cursor-pointer break-all text-left"
+              className={noBg 
+                ? "inline-flex items-center gap-1 text-[11px] font-mono transition-colors cursor-pointer break-all text-left text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                : "inline-flex items-center gap-1 px-1.5 py-0.5 mx-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 border border-amber-200/40 hover:bg-amber-100 dark:hover:bg-amber-900/30 text-[11px] font-mono transition-all cursor-pointer break-all text-left"
+              }
               title="Click to copy Netzwerk/UNC path to clipboard"
             >
-              <Folder className="w-3.5 h-3.5 shrink-0 text-amber-500" />
-              <span className="underline decoration-dotted decoration-amber-400">{token.text}</span>
+              <Folder className={`w-3.5 h-3.5 shrink-0 ${noBg ? "text-blue-500" : "text-amber-500"}`} />
+              <span className={noBg ? "underline decoration-dotted decoration-blue-400" : "underline decoration-dotted decoration-amber-400"}>{token.text}</span>
               {isCopied ? (
                 <span className="ml-1 text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5 shrink-0 bg-emerald-50 dark:bg-emerald-950/50 px-1 rounded border border-emerald-200/30">
                   <Check className="w-2.5 h-2.5" /> Copied!
                 </span>
               ) : (
-                <Copy className="ml-1 w-2.5 h-2.5 text-amber-500/60 hover:text-amber-600 shrink-0" />
+                <Copy className={`ml-1 w-2.5 h-2.5 ${noBg ? "text-blue-400/60 hover:text-blue-600" : "text-amber-500/60 hover:text-amber-600"} shrink-0`} />
               )}
             </button>
           );
