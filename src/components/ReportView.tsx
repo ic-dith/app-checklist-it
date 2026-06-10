@@ -150,7 +150,7 @@ export function ReportView({
           const state = taskStates[item.id];
           const isComp = state?.isCompleted;
           const desc = state?.description && state.description.trim() ? linkifyHTML(state.description.trim(), true) : "";
-          const note = state?.note && state.note.trim() ? linkifyHTML(state.note.trim()) : "";
+          const note = state?.note && state.note.trim() ? linkifyHTML(state.note.trim(), true) : "";
           
           let statusText = `<span style="color: #94a3b8; font-weight: 700;">— PENDING</span>`;
           if (state?.status === "ok") {
@@ -182,7 +182,7 @@ export function ReportView({
                 ${desc ? `<span style="display: block; color: #334155; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word; line-height: 1.4;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
               <td style="padding: 12px 16px; font-style: italic; color: #64748b; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
-                ${note ? `<span style="display: block; background-color: #ffffff; border: 1px solid #e2e8f0; color: #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
+                ${note ? `<span style="display: block; color: #334155; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word; line-height: 1.4;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
             </tr>
           `;
@@ -207,6 +207,10 @@ export function ReportView({
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@450;750&display=swap" rel="stylesheet">
   <style>
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #ffffff;
@@ -741,8 +745,8 @@ export function ReportView({
                                 </td>
                                 <td className="py-4 px-4 text-slate-500 dark:text-slate-400 break-words whitespace-normal font-sans">
                                   {hasNote ? (
-                                    <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-650 dark:text-slate-300 px-3 py-2 rounded-lg block font-sans font-medium leading-relaxed break-words whitespace-normal shadow-3xs">
-                                      <LinkifiedText text={state.note.trim()} />
+                                    <span className="text-[11px] text-slate-650 dark:text-slate-300 block font-sans font-medium leading-relaxed break-words whitespace-normal">
+                                      <LinkifiedText text={state.note.trim()} noBg={true} />
                                     </span>
                                   ) : (
                                     <span className="text-slate-300 dark:text-slate-755 font-mono tracking-wider">—</span>
