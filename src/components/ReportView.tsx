@@ -105,7 +105,7 @@ export function ReportView({
       const linkifyHTML = (text: string): string => {
         if (!text) return "";
         const urlRegex = /(https?:\/\/[^\s<>""'']+)/gi;
-        const uncRegex = /\\\\([a-zA-Z0-9_.()\[\]-]+)(?:\\[a-zA-Z0-9_.()\[\]-]+(?:\s+[a-zA-Z0-9_.()\[\]-]+)*)+/gi;
+        const uncRegex = /\\\\([^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)(?:\\[^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)+/gi;
         
         let result = text.replace(urlRegex, (url) => {
           return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #4f46e5; text-decoration: underline; word-break: break-all;">${url}</a>`;

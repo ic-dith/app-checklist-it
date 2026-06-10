@@ -21,7 +21,7 @@ export function LinkifiedText({ text, className = "" }: LinkifiedTextProps) {
 
   // Precise Windows UNC (Network) path regex supporting spaces inside segments and standard characters,
   // excluding trailing spaces or non-path punctuation from capture at the end of sentence.
-  const uncRegex = /\\\\([a-zA-Z0-9_.()\[\]-]+)(?:\\[a-zA-Z0-9_.()\[\]-]+(?:\s+[a-zA-Z0-9_.()\[\]-]+)*)+/gi;
+  const uncRegex = /\\\\([^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)(?:\\[^\\/:*?"<>|\s\r\n]+(?:\s+[^\\/:*?"<>|\s\r\n]+)*)+/gi;
 
   // Combine regex matches to parse text sequentially
   const tokens: Token[] = [];
