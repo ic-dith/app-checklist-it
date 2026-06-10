@@ -839,11 +839,12 @@ export default function App() {
           resetStates[item.id] = {
             itemId: item.id,
             isCompleted: false,
-            description: "",
+            description: item.description || "",
             note: "", // Reset all notes to empty
           };
         });
         setTaskStates(resetStates);
+        syncTicksToStorage(resetStates);
         setActiveView("checklist");
       }
     );

@@ -586,9 +586,6 @@ export function ReportView({
                   remarks filled
                 </span>
               </div>
-              <p className="text-xs text-slate-450 dark:text-slate-550 mt-2 italic font-medium leading-tight">
-                Notes and remarks are permanently saved.
-              </p>
             </div>
           </div>
 
