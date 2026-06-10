@@ -160,15 +160,26 @@ export function ReportView({
             statusText = `<span style="color: #4f46e5; font-weight: 700;">✔ DONE</span>`;
           }
           
+          let rowBgColorStyle = "";
+          if (state?.status === "ok") {
+            rowBgColorStyle = "background-color: #f0fdf4;";
+          } else if (state?.status === "warning") {
+            rowBgColorStyle = "background-color: #fefce8;";
+          } else if (state?.status === "error") {
+            rowBgColorStyle = "background-color: #fef2f2;";
+          } else if (isComp) {
+            rowBgColorStyle = "background-color: #f8fafc;";
+          }
+          
           tableHTML += `
-            <tr style="border-bottom: 1px solid #e2e8f0;">
+            <tr style="border-bottom: 1px solid #e2e8f0; ${rowBgColorStyle}">
               <td style="padding: 12px 16px; font-family: monospace; font-size: 11px; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">${statusText}</td>
               <td class="${isComp ? 'line-through' : ''}" style="padding: 12px 16px; font-weight: 500; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${isComp ? 'text-decoration: line-through; color: #94a3b8;' : ''}">${item.text}</td>
               <td style="padding: 12px 16px; font-style: italic; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
-                ${desc ? `<span style="display: block; background-color: #f0fdf4; border: 1px solid #dcfce7; color: #166534; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
+                ${desc ? `<span style="display: block; background-color: #ffffff; border: 1px solid #dcfce7; color: #166534; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
               <td style="padding: 12px 16px; font-style: italic; color: #64748b; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
-                ${note ? `<span style="display: block; background-color: #f1f5f9; border: 1px solid #e2e8f0; color: #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
+                ${note ? `<span style="display: block; background-color: #ffffff; border: 1px solid #e2e8f0; color: #334155; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
             </tr>
           `;
@@ -675,8 +686,19 @@ export function ReportView({
                             const hasDesc = state?.description && state.description.trim();
                             const hasNote = state?.note && state.note.trim();
 
+                            let rowBgClass = "";
+                            if (state?.status === "ok") {
+                              rowBgClass = "bg-emerald-50/30 dark:bg-emerald-950/15";
+                            } else if (state?.status === "warning") {
+                              rowBgClass = "bg-yellow-50/30 dark:bg-yellow-950/15";
+                            } else if (state?.status === "error") {
+                              rowBgClass = "bg-red-50/35 dark:bg-red-950/15";
+                            } else if (state?.isCompleted) {
+                              rowBgClass = "bg-slate-50/40 dark:bg-slate-900/10";
+                            }
+
                             return (
-                              <tr key={item.id} className="text-xs hover:bg-slate-50/20 dark:hover:bg-slate-900/10 align-top">
+                              <tr key={item.id} className={`text-xs hover:bg-slate-100/30 dark:hover:bg-slate-900/30 align-top transition-colors ${rowBgClass}`}>
                                 <td className="py-3 px-4 font-mono font-bold break-words whitespace-normal align-middle">
                                   {state?.status === "ok" ? (
                                     <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/25 px-2 py-0.5 rounded-md border border-emerald-100 dark:border-emerald-900/30 text-[10px] uppercase">

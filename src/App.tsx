@@ -1274,10 +1274,10 @@ export default function App() {
             <div className={`flex flex-col gap-6 transition-all duration-300 ${sidebarCollapsed ? "lg:col-span-12" : "lg:col-span-7"}`}>
               
               {/* Checklist toolbar (Filters & Search) */}
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-xs">
+              <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-xs">
                 
                 {/* Search & Collapse buttons container */}
-                <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="flex items-center gap-3 w-full lg:w-auto">
                   {/* Sidebar Toggle Collapse/Expand Button */}
                   <button
                     id="toggle-sidebar-btn"
@@ -1304,7 +1304,7 @@ export default function App() {
                   </button>
 
                   {/* Search input field */}
-                  <div className="relative flex-1 md:w-64">
+                  <div className="relative flex-1 lg:w-64">
                     <input
                       id="search-tasks-input"
                       type="text"
@@ -1320,9 +1320,9 @@ export default function App() {
                 </div>
 
                 {/* Categories filtering bar */}
-                <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar py-0.5 justify-end">
+                <div className="flex items-center gap-2 w-full lg:w-auto flex-wrap py-0.5 lg:justify-end">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0 hidden sm:block" />
-                  <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+                  <div className="flex flex-wrap gap-1.5 justify-start lg:justify-end">
                     {activeCategories.map((cat) => (
                       <button
                         id={`filter-cat-${cat.replace(/\s+/g, '')}`}
