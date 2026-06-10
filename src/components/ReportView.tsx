@@ -657,8 +657,8 @@ export function ReportView({
                           <tr className="bg-slate-50 dark:bg-slate-900/50 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-slate-200 dark:border-slate-800">
                             <th className="py-3 px-4 font-bold w-28">Status</th>
                             <th className="py-3 px-4 font-bold w-2/5">Checkpoint Description</th>
-                            <th className="py-3 px-4 font-bold w-[28%]">Description (Saved)</th>
-                            <th className="py-3 px-4 font-bold w-[22%]">Notes (Transient)</th>
+                            <th className="py-3 px-4 font-bold w-[28%]">Description</th>
+                            <th className="py-3 px-4 font-bold w-[22%]">Notes</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-150 dark:divide-slate-850">
