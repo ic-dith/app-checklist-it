@@ -86,10 +86,20 @@ export function ReportView({
     }
   };
 
+  const getYYYYMMDD = () => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const rDay = String(d.getDate()).padStart(2, "0");
+    return `${y}${m}${rDay}`;
+  };
+
   const downloadPrintableHTML = () => {
     try {
       const pTitle = appTitle || "Checklist Completion Report";
       const pSubtitle = appSubtitle || "Operational Safety Checklist Code Review & Audit";
+      const yyyymmdd = getYYYYMMDD();
+      const docTitle = `${yyyymmdd} - checklist report`;
 
       let tableHTML = "";
       categories.forEach(cat => {
@@ -109,8 +119,8 @@ export function ReportView({
                   <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
                     <th style="width: 18%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Status</th>
                     <th style="width: 37%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Checkpoint Description</th>
-                    <th style="width: 25%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Description (Saved)</th>
-                    <th style="width: 20%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Notes (Transient)</th>
+                    <th style="width: 25%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Description</th>
+                    <th style="width: 20%; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; color: #64748b; padding: 12px 16px;">Notes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -153,7 +163,7 @@ export function ReportView({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${pTitle} - Print Document</title>
+  <title>${docTitle}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@450;750&display=swap" rel="stylesheet">
@@ -408,7 +418,7 @@ export function ReportView({
       const url = URL.createObjectURL(blob);
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", url);
-      const fileName = `${pTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_completion_report.html`;
+      const fileName = `${yyyymmdd} - checklist report.html`;
       downloadAnchor.setAttribute("download", fileName);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
@@ -433,7 +443,12 @@ export function ReportView({
       }
     } else {
       try {
+        const oldTitle = document.title;
+        document.title = `${getYYYYMMDD()} - checklist report`;
         window.print();
+        setTimeout(() => {
+          document.title = oldTitle;
+        }, 1000);
       } catch (err) {
         console.error("Direct printing failed, falling back to download:", err);
         downloadPrintableHTML();
