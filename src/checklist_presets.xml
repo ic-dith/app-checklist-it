@@ -102,6 +102,6 @@
     <id>item-1781080012080-m2jw3d12w</id>
     <text>Task Clickup aggiunta commento esito in activity</text>
     <category>governance</category>
-    <description>generare file pdf ed allegare al task ClickUp</description>
+    <description>salvare il report html nel task ClickUp</description>
   </item>
 </checklist>
