@@ -518,28 +518,14 @@ export function ReportView({
 
         <div className="flex items-center gap-3">
           <button
-            id="print-report-btn"
+            id="download-html-report-btn"
             type="button"
-            onClick={handlePrint}
-            className="flex items-center gap-1.5 px-4 py-2.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all cursor-pointer shadow-xs hover:shadow-md"
-            title="Print compliance checklist card"
+            onClick={downloadPrintableHTML}
+            className="flex items-center gap-2 px-5 py-2.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all cursor-pointer shadow-sm hover:shadow-md"
+            title="Download high-fidelity HTML report with colors kept fully intact"
           >
-            <Printer className="w-3.5 h-3.5" />
-            <span>Print Report</span>
-          </button>
-
-          <button
-            id="copy-report-btn"
-            type="button"
-            onClick={handleCopy}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-xs rounded-lg font-bold tracking-wide uppercase transition-all cursor-pointer ${
-              copied 
-                ? "bg-emerald-600 hover:bg-emerald-700 text-white border border-transparent shadow-xs"
-                : "bg-slate-100 hover:bg-slate-200 text-slate-850 dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-200 border border-transparent shadow-xs"
-            }`}
-          >
-            <Copy className="w-3.5 h-3.5" />
-            <span>{copied ? "Copied!" : "Copy (Markdown)"}</span>
+            <FileText className="w-4 h-4" />
+            <span>Download HTML Report</span>
           </button>
         </div>
       </div>
