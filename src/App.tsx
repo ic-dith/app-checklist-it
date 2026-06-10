@@ -828,10 +828,14 @@ export default function App() {
   const handleResetSession = () => {
     triggerConfirm(
       "Reset Active Assessment Run?",
-      "This will clear all verified ticks and purge your temporary scratchpad remarks. Your checklist template configuration will remain intact.",
+      "This will clear all verified ticks, purge your temporary scratchpad remarks, and reset the operator name. Your checklist template configuration will remain intact.",
       () => {
         // Clear session ticks in localStorage
         localStorage.removeItem("checklist_session_ticks");
+        
+        // Reset checker name
+        setCheckerName("");
+        localStorage.removeItem("checklist_checker_name");
 
         // Reset in-memory session states
         const resetStates: Record<string, SessionTaskState> = {};
