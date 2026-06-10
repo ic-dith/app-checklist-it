@@ -2,8 +2,6 @@ import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshC
 import { ChecklistItem, SessionTaskState } from "../types";
 import { useState } from "react";
 import { LinkifiedText } from "./LinkifiedText";
-// @ts-ignore
-import html2pdf from "html2pdf.js";
 
 interface ReportViewProps {
   items: ChecklistItem[];
@@ -98,7 +96,29 @@ export function ReportView({
     return `${y}${m}${rDay}`;
   };
 
-  const handleDownloadPDF = () => {
+  // Caricamento dinamico tramite CDN affidabile per evitare problemi di build/installazione su server/GitHub CI
+  const loadHtml2pdf = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      if ((window as any).html2pdf) {
+        resolve((window as any).html2pdf);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+      script.integrity = "sha512-GsLlZN/3F2ErC5xS5YGjCVVJKdrEv6yFL13SGzgjhgRe5wWw6Uf0516V079upReaxldS339yi86YY1Alua9Iyw==";
+      script.crossOrigin = "anonymous";
+      script.referrerPolicy = "no-referrer";
+      script.onload = () => {
+        resolve((window as any).html2pdf);
+      };
+      script.onerror = (err) => {
+        reject(err);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleDownloadPDF = async () => {
     setIsGeneratingPDF(true);
     const element = document.getElementById("report-printable-area");
     if (!element) {
@@ -107,43 +127,60 @@ export function ReportView({
     }
 
     try {
-      // Create a temporary off-screen container that forces standard light-mode styling
+      // Carica la libreria in tempo reale
+      const html2pdfLib = await loadHtml2pdf();
+
+      // Crea un contenitore temporaneo isolato con tema chiaro (light-mode)
       const container = document.createElement("div");
-      
-      // Forces white background, dark text, clean styling, and prevents dark mode classes from leaking
       container.className = "light bg-white text-slate-900 p-8 rounded-none";
       container.style.position = "absolute";
       container.style.left = "-9999px";
       container.style.top = "0";
-      container.style.width = "820px"; // standard A4-sized width for perfect ratio rendering
+      container.style.width = "820px"; // Larghezza fissa adatta al formato A4
       container.style.backgroundColor = "#ffffff";
       container.style.color = "#1e293b";
 
-      // Clone our report elements
+      // Clona il blocco del report
       const clone = element.cloneNode(true) as HTMLElement;
 
-      // Ensure elements inside don't carry print-hidden styles
-      const printHiddenElements = clone.querySelectorAll(".print\\:hidden");
-      printHiddenElements.forEach(el => el.remove());
-
-      // Ensure that all background classes are explicitly forced to solid light background styles for the canvas engine
+      // Forza gli sfondi colorati a livello CSS inline sui rami del clone per preservarli nel canvas
       const allRows = clone.querySelectorAll("tr");
       allRows.forEach((row) => {
-        if (row.className.includes("bg-emerald-50")) {
-          row.setAttribute("style", "background-color: #f0fdf4 !important;");
-        } else if (row.className.includes("bg-yellow-50")) {
-          row.setAttribute("style", "background-color: #fefce8 !important;");
-        } else if (row.className.includes("bg-red-50")) {
-          row.setAttribute("style", "background-color: #fef2f2 !important;");
-        } else if (row.className.includes("bg-slate-50")) {
-          row.setAttribute("style", "background-color: #f8fafc !important;");
+        let styleStr = "";
+        const cls = row.className || "";
+
+        if (cls.includes("bg-emerald-50") || cls.includes("bg-emerald-950") || cls.includes("emerald")) {
+          styleStr = "background-color: #f0fdf4 !important;";
+        } else if (cls.includes("bg-yellow-50") || cls.includes("bg-yellow-950") || cls.includes("yellow")) {
+          styleStr = "background-color: #fefce8 !important;";
+        } else if (cls.includes("bg-red-50") || cls.includes("bg-red-950") || cls.includes("red")) {
+          styleStr = "background-color: #fef2f2 !important;";
+        } else if (cls.includes("bg-slate-50") || cls.includes("bg-slate-900") || cls.includes("slate-900/10")) {
+          styleStr = "background-color: #f8fafc !important;";
+        }
+
+        if (styleStr) {
+          row.setAttribute("style", styleStr);
+          const tds = row.querySelectorAll("td");
+          tds.forEach((td) => {
+            td.setAttribute("style", `${td.getAttribute("style") || ""} ${styleStr}`);
+          });
         }
       });
+
+      // Rimuovi bordi o ombreggiature dei bottoni ed elimina elementi con classe print:hidden
+      const allButtons = clone.querySelectorAll("button");
+      allButtons.forEach((btn) => {
+        btn.setAttribute("style", "background: transparent !important; border: none !important; outline: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; display: inline !important; color: inherit; font-size: inherit; font-family: inherit;");
+      });
+
+      const printHiddenElements = clone.querySelectorAll(".print\\:hidden, svg.print\\:hidden, button svg");
+      printHiddenElements.forEach(el => el.remove());
 
       container.appendChild(clone);
       document.body.appendChild(container);
 
-      // Setup html2pdf parameters
+      // Opzioni di rendering
       const opt = {
         margin:       10,
         filename:     `${getYYYYMMDD()} - checklist report.pdf`,
@@ -158,21 +195,19 @@ export function ReportView({
         jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
       };
 
-      // @ts-ignore
-      html2pdf().from(container).set(opt).save().then(() => {
-        if (container.parentNode) {
-          document.body.removeChild(container);
-        }
-        setIsGeneratingPDF(false);
-      }).catch((err: any) => {
-        console.error("PDF generation failed:", err);
-        if (container.parentNode) {
-          document.body.removeChild(container);
-        }
-        setIsGeneratingPDF(false);
-      });
-    } catch (e) {
-      console.error("Error generating PDF:", e);
+      await html2pdfLib().from(container).set(opt).save();
+
+      if (container.parentNode) {
+        document.body.removeChild(container);
+      }
+      setIsGeneratingPDF(false);
+    } catch (err) {
+      console.error("PDF download failed:", err);
+      if (onShowAlert) {
+        onShowAlert("Generazione fallita", "Impossibile creare il PDF tramite browser.");
+      } else {
+        alert("Impossibile scaricare il file PDF.");
+      }
       setIsGeneratingPDF(false);
     }
   };
