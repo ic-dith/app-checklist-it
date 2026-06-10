@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Check, Trash2, Edit2, Notebook, X, Save } from "lucide-react";
 import { ChecklistItem, SessionTaskState } from "../types";
+import { LinkifiedText } from "./LinkifiedText";
 
 interface ChecklistItemRowProps {
   item: ChecklistItem;
@@ -23,6 +24,33 @@ export function ChecklistItemRow({
 }: ChecklistItemRowProps) {
   const [isEditingText, setIsEditingText] = useState(false);
   const [editText, setEditText] = useState(item.text);
+
+  const descRef = useRef<HTMLTextAreaElement | null>(null);
+  const noteRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const adjustHeight = (textarea: HTMLTextAreaElement | null) => {
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight(descRef.current);
+  }, [taskState.description]);
+
+  useEffect(() => {
+    adjustHeight(noteRef.current);
+  }, [taskState.note]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      adjustHeight(descRef.current);
+      adjustHeight(noteRef.current);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSaveText = () => {
     if (editText.trim() && editText.trim() !== item.text) {
@@ -147,12 +175,19 @@ export function ChecklistItemRow({
           </label>
           <textarea
             id={`desc-input-${item.id}`}
+            ref={descRef}
             value={taskState.description || ""}
             onChange={(e) => onUpdateDescription(item.id, e.target.value)}
             placeholder="description"
             rows={1}
-            className="w-full min-h-[44px] py-2 px-3 bg-emerald-50/10 dark:bg-emerald-950/5 border border-emerald-100 dark:border-emerald-900/40 rounded text-sm text-slate-750 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:focus:ring-emerald-700 resize-y placeholder-slate-400"
+            className="w-full min-h-[44px] py-2 px-3 bg-emerald-50/10 dark:bg-emerald-950/5 border border-emerald-100 dark:border-emerald-900/40 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-400 dark:focus:ring-emerald-700 resize-none overflow-hidden placeholder-slate-400"
           />
+          {taskState.description && /(https?:\/\/[^\s]+)/gi.test(taskState.description) && (
+            <div className="text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-50/40 dark:bg-emerald-950/20 px-2 py-1 rounded border border-emerald-150/40 mt-1 break-words">
+              <span className="font-semibold">🌐 Clickable link: </span>
+              <LinkifiedText text={taskState.description} />
+            </div>
+          )}
         </div>
 
         {/* Note temporanee (Non salvate) */}
@@ -163,13 +198,20 @@ export function ChecklistItemRow({
           <div className="relative">
             <textarea
               id={`note-input-${item.id}`}
+              ref={noteRef}
               value={taskState.note || ""}
               onChange={(e) => onUpdateNote(item.id, e.target.value)}
               placeholder="notes"
               rows={1}
-              className="w-full min-h-[44px] py-2 px-3 bg-slate-50 dark:bg-slate-950/15 border border-slate-200 dark:border-slate-850 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-350 dark:focus:ring-slate-750 resize-y placeholder-slate-400"
+              className="w-full min-h-[44px] py-2 px-3 bg-slate-50 dark:bg-slate-950/15 border border-slate-200 dark:border-slate-850 rounded text-sm text-slate-755 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-350 dark:focus:ring-slate-750 resize-none overflow-hidden placeholder-slate-400"
             />
           </div>
+          {taskState.note && /(https?:\/\/[^\s]+)/gi.test(taskState.note) && (
+            <div className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-100/40 dark:bg-slate-900/20 px-2 py-1 rounded border border-slate-200/40 mt-1 break-words">
+              <span className="font-semibold">🌐 Clickable link: </span>
+              <LinkifiedText text={taskState.note} />
+            </div>
+          )}
           
           {/* Helper quick tags for notes */}
           <div className="flex flex-wrap gap-1">

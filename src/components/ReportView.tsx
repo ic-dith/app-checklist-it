@@ -1,6 +1,7 @@
 import { Copy, CheckCircle2, AlertCircle, FileText, Printer, ArrowLeft, RefreshCw } from "lucide-react";
 import { ChecklistItem, SessionTaskState } from "../types";
 import { useState } from "react";
+import { LinkifiedText } from "./LinkifiedText";
 
 interface ReportViewProps {
   items: ChecklistItem[];
@@ -101,6 +102,14 @@ export function ReportView({
       const yyyymmdd = getYYYYMMDD();
       const docTitle = `${yyyymmdd} - checklist report`;
 
+      const linkifyHTML = (text: string): string => {
+        if (!text) return "";
+        const urlRegex = /(https?:\/\/[^\s<>""'']+)/gi;
+        return text.replace(urlRegex, (url) => {
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #4f46e5; text-decoration: underline; word-break: break-all;">${url}</a>`;
+        });
+      };
+
       let tableHTML = "";
       categories.forEach(cat => {
         const catItems = items.filter(item => item.category === cat);
@@ -129,8 +138,8 @@ export function ReportView({
         catItems.forEach(item => {
           const state = taskStates[item.id];
           const isComp = state?.isCompleted;
-          const desc = state?.description && state.description.trim() ? state.description.trim() : "";
-          const note = state?.note && state.note.trim() ? state.note.trim() : "";
+          const desc = state?.description && state.description.trim() ? linkifyHTML(state.description.trim()) : "";
+          const note = state?.note && state.note.trim() ? linkifyHTML(state.note.trim()) : "";
           const statusText = isComp 
             ? `<span style="color: #4f46e5; font-weight: 700;">✔ DONE</span>` 
             : `<span style="color: #94a3b8; font-weight: 700;">— PENDING</span>`;
@@ -668,19 +677,19 @@ export function ReportView({
                                 }`}>
                                   {item.text}
                                 </td>
-                                <td className="py-4 px-4 text-slate-600 dark:text-slate-400 break-words whitespace-normal">
+                                <td className="py-4 px-4 text-slate-600 dark:text-slate-400 break-words whitespace-normal font-sans">
                                   {hasDesc ? (
                                     <span className="bg-emerald-50 dark:bg-emerald-950/25 border border-emerald-100 dark:border-emerald-900/30 text-[11px] text-emerald-850 dark:text-emerald-300 px-3 py-2 rounded-lg block font-sans font-medium leading-relaxed break-words whitespace-normal shadow-3xs">
-                                      {state.description.trim()}
+                                      <LinkifiedText text={state.description.trim()} />
                                     </span>
                                   ) : (
                                     <span className="text-slate-300 dark:text-slate-755 font-mono tracking-wider">—</span>
                                   )}
                                 </td>
-                                <td className="py-4 px-4 text-slate-500 dark:text-slate-400 italic break-words whitespace-normal">
+                                <td className="py-4 px-4 text-slate-500 dark:text-slate-400 break-words whitespace-normal font-sans">
                                   {hasNote ? (
-                                    <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-650 dark:text-slate-300 px-3 py-2 rounded-lg block font-sans font-medium leading-relaxed break-words whitespace-normal not-italic">
-                                      "{state.note.trim()}"
+                                    <span className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-650 dark:text-slate-300 px-3 py-2 rounded-lg block font-sans font-medium leading-relaxed break-words whitespace-normal shadow-3xs">
+                                      <LinkifiedText text={state.note.trim()} />
                                     </span>
                                   ) : (
                                     <span className="text-slate-300 dark:text-slate-755 font-mono tracking-wider">—</span>
