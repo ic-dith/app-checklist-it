@@ -1082,24 +1082,7 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Example Quick-loaders */}
-                <div className="border-t border-slate-100 dark:border-slate-800 pt-3">
-                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 block mb-2">
-                    Try Example Templates
-                  </span>
-                  <div className="flex flex-col gap-2">
-                    <button
-                      id="load-dedicated-xml-btn"
-                      type="button"
-                      onClick={loadFromDedicatedXML}
-                      className="flex justify-center items-center gap-2 py-2.5 px-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 text-slate-650 dark:text-slate-400 font-semibold text-xs rounded-lg transition-all cursor-pointer"
-                      title="Reset or load starter template from dedicated checklist_presets.xml"
-                    >
-                      <FileCode className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span>Reset to Default XML Preset</span>
-                    </button>
-                  </div>
-                </div>
+
 
               </div>
               
