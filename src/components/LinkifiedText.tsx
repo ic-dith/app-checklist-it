@@ -1,36 +1,143 @@
-import React from "react";
+import React, { useState } from "react";
+import { Folder, Check, Copy } from "lucide-react";
 
 interface LinkifiedTextProps {
   text: string;
   className?: string;
 }
 
+interface Token {
+  text: string;
+  type: "text" | "url" | "unc";
+}
+
 export function LinkifiedText({ text, className = "" }: LinkifiedTextProps) {
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
   if (!text) return null;
 
-  // General URL capture regex that matches http:// or https:// addresses
+  // Regular expression for standard HTTP/HTTPS URL
   const urlRegex = /(https?:\/\/[^\s<>""'']+)/gi;
-  const parts = text.split(urlRegex);
+
+  // Precise Windows UNC (Network) path regex supporting spaces inside segments and standard characters,
+  // excluding trailing spaces or non-path punctuation from capture at the end of sentence.
+  const uncRegex = /\\\\([a-zA-Z0-9_.()\[\]-]+)(?:\\[a-zA-Z0-9_.()\[\]-]+(?:\s+[a-zA-Z0-9_.()\[\]-]+)*)+/gi;
+
+  // Combine regex matches to parse text sequentially
+  const tokens: Token[] = [];
+  let lastIndex = 0;
+  
+  // Find all matches for both URLs and UNC paths
+  const matches: { index: number; length: number; text: string; type: "url" | "unc" }[] = [];
+
+  // 1. Gather URL matches
+  let match;
+  urlRegex.lastIndex = 0;
+  while ((match = urlRegex.exec(text)) !== null) {
+    matches.push({
+      index: match.index,
+      length: match[0].length,
+      text: match[0],
+      type: "url"
+    });
+  }
+
+  // 2. Gather UNC matches
+  uncRegex.lastIndex = 0;
+  while ((match = uncRegex.exec(text)) !== null) {
+    // Ensure we don't overlap with already matched URLs
+    const isOverlapping = matches.some(
+      m => (match!.index >= m.index && match!.index < m.index + m.length) ||
+           (match!.index + match![0].length > m.index && match!.index + match![0].length <= m.index + m.length)
+    );
+    if (!isOverlapping) {
+      matches.push({
+        index: match.index,
+        length: match[0].length,
+        text: match[0],
+        type: "unc"
+      });
+    }
+  }
+
+  // Sort matches by index to parse linearly
+  matches.sort((a, b) => a.index - b.index);
+
+  // 3. Tokenize
+  for (const m of matches) {
+    if (m.index > lastIndex) {
+      tokens.push({
+        text: text.substring(lastIndex, m.index),
+        type: "text"
+      });
+    }
+    tokens.push({
+      text: m.text,
+      type: m.type
+    });
+    lastIndex = m.index + m.length;
+  }
+
+  if (lastIndex < text.length) {
+    tokens.push({
+      text: text.substring(lastIndex),
+      type: "text"
+    });
+  }
+
+  const handleCopyUnc = (UNCPath: string, index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(UNCPath);
+    setCopiedIndex(index);
+    setTimeout(() => {
+      setCopiedIndex(null);
+    }, 2000);
+  };
 
   return (
-    <span className={className}>
-      {parts.map((part, index) => {
-        if (part.match(urlRegex)) {
+    <span className={`${className} inline-wrap`}>
+      {tokens.map((token, index) => {
+        if (token.type === "url") {
           return (
             <a
               key={index}
-              href={part}
+              href={token.text}
               target="_blank"
               rel="noopener noreferrer"
               referrerPolicy="no-referrer"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-850 dark:hover:text-indigo-300 underline cursor-pointer break-all inline"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline cursor-pointer break-all inline"
               onClick={(e) => e.stopPropagation()}
             >
-              {part}
+              {token.text}
             </a>
           );
         }
-        return part;
+        
+        if (token.type === "unc") {
+          const isCopied = copiedIndex === index;
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={(e) => handleCopyUnc(token.text, index, e)}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-0.5 rounded bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-400 border border-amber-200/40 hover:bg-amber-100 dark:hover:bg-amber-900/30 text-[11px] font-mono transition-all cursor-pointer break-all text-left"
+              title="Click to copy Netzwerk/UNC path to clipboard"
+            >
+              <Folder className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+              <span className="underline decoration-dotted decoration-amber-400">{token.text}</span>
+              {isCopied ? (
+                <span className="ml-1 text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5 shrink-0 bg-emerald-50 dark:bg-emerald-950/50 px-1 rounded border border-emerald-200/30">
+                  <Check className="w-2.5 h-2.5" /> Copied!
+                </span>
+              ) : (
+                <Copy className="ml-1 w-2.5 h-2.5 text-amber-500/60 hover:text-amber-600 shrink-0" />
+              )}
+            </button>
+          );
+        }
+
+        return <React.Fragment key={index}>{token.text}</React.Fragment>;
       })}
     </span>
   );

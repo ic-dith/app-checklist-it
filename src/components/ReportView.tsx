@@ -105,9 +105,17 @@ export function ReportView({
       const linkifyHTML = (text: string): string => {
         if (!text) return "";
         const urlRegex = /(https?:\/\/[^\s<>""'']+)/gi;
-        return text.replace(urlRegex, (url) => {
+        const uncRegex = /\\\\([a-zA-Z0-9_.()\[\]-]+)(?:\\[a-zA-Z0-9_.()\[\]-]+(?:\s+[a-zA-Z0-9_.()\[\]-]+)*)+/gi;
+        
+        let result = text.replace(urlRegex, (url) => {
           return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #4f46e5; text-decoration: underline; word-break: break-all;">${url}</a>`;
         });
+        
+        result = result.replace(uncRegex, (unc) => {
+          return `<span style="font-family: monospace; background-color: #fffbeb; color: #b45309; padding: 2px 6px; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; word-break: break-all; font-size: 0.9em; display: inline-block;">${unc}</span>`;
+        });
+        
+        return result;
       };
 
       let tableHTML = "";
