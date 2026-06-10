@@ -176,12 +176,12 @@ export function ReportView({
           
           tableHTML += `
             <tr style="border-bottom: 1px solid #e2e8f0; ${rowBgColorStyle}">
-              <td style="padding: 12px 16px; font-family: monospace; font-size: 11px; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">${statusText}</td>
-              <td class="${isComp ? 'line-through' : ''}" style="padding: 12px 16px; font-weight: 500; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${isComp ? 'text-decoration: line-through; color: #94a3b8;' : ''}">${item.text}</td>
-              <td style="padding: 12px 16px; font-style: italic; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
+              <td style="padding: 12px 16px; font-family: monospace; font-size: 11px; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${rowBgColorStyle}">${statusText}</td>
+              <td class="${isComp ? 'line-through' : ''}" style="padding: 12px 16px; font-weight: 500; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${isComp ? 'text-decoration: line-through; color: #94a3b8;' : ''} ${rowBgColorStyle}">${item.text}</td>
+              <td style="padding: 12px 16px; font-style: italic; color: #334155; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${rowBgColorStyle}">
                 ${desc ? `<span style="display: block; color: #334155; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word; line-height: 1.4;">${desc}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
-              <td style="padding: 12px 16px; font-style: italic; color: #64748b; word-break: break-word; overflow-wrap: break-word; vertical-align: top;">
+              <td style="padding: 12px 16px; font-style: italic; color: #64748b; word-break: break-word; overflow-wrap: break-word; vertical-align: top; ${rowBgColorStyle}">
                 ${note ? `<span style="display: block; color: #334155; font-size: 11px; font-family: sans-serif; font-style: normal; word-break: break-word; overflow-wrap: break-word; line-height: 1.4;">${note}</span>` : `<span style="color: #cbd5e1;">—</span>`}
               </td>
             </tr>
