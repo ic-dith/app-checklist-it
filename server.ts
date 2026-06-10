@@ -10,6 +10,54 @@ async function startServer() {
   // Use JSON body parser for API requests
   app.use(express.json({ limit: "15mb" }));
 
+  // API Endpoint to fetch current deployment version (git commit or package.json version)
+  app.get("/api/version", (req, res) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    try {
+      let commitHash = "";
+      // Try fetching using git CLI
+      try {
+        const { execSync } = require("child_process");
+        commitHash = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim();
+      } catch (e) {
+        // Fallback to manual reading of .git files
+        try {
+          const projectRoot = process.cwd();
+          const headPath = path.join(projectRoot, ".git", "HEAD");
+          if (fs.existsSync(headPath)) {
+            const headContent = fs.readFileSync(headPath, "utf8").trim();
+            if (headContent.startsWith("ref: ")) {
+              const refPath = headContent.substring(5).trim();
+              const fullRefPath = path.join(projectRoot, ".git", refPath);
+              if (fs.existsSync(fullRefPath)) {
+                commitHash = fs.readFileSync(fullRefPath, "utf8").trim().substring(0, 7);
+              }
+            } else if (headContent.length >= 7) {
+              commitHash = headContent.substring(0, 7);
+            }
+          }
+        } catch (err) {
+          console.warn("[Server] Fallback git reading failed:", err);
+        }
+      }
+
+      // Read package.json version
+      let pkgVersion = "1.0.0";
+      try {
+        const pkgPath = path.join(process.cwd(), "package.json");
+        if (fs.existsSync(pkgPath)) {
+          const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+          pkgVersion = pkg.version || "1.0.0";
+        }
+      } catch {}
+
+      const versionStr = commitHash ? `v. ${pkgVersion}-${commitHash}` : `v. ${pkgVersion}-dev`;
+      return res.json({ version: versionStr, hash: commitHash || "dev" });
+    } catch (err: any) {
+      return res.json({ version: "v. 1.0.0-unknown", hash: "unknown" });
+    }
+  });
+
   // API Endpoint to load checklist XML files directly from disk
   app.get("/api/load-checklist", (req, res) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");

@@ -99,12 +99,29 @@ export default function App() {
   // Filtering states
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  
+  // State to hold compiled deployment version dynamically retrieved from server APIs
+  const [appVersion, setAppVersion] = useState<string>("");
 
   // Collapsible left sidebar control state (collapsed by default)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem("checklist_sidebar_collapsed");
     return saved !== null ? saved === "true" : true;
   });
+
+  // Fetch deployment version details on mount
+  useEffect(() => {
+    fetch("/api/version")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.version) {
+          setAppVersion(data.version);
+        }
+      })
+      .catch((err) => {
+        console.warn("Failed to fetch deployment version from server:", err);
+      });
+  }, []);
 
   // Keep browser tab title in sync with the current app title
   useEffect(() => {
@@ -877,7 +894,14 @@ export default function App() {
               <ClipboardList className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-display font-bold tracking-tight text-slate-900 dark:text-white">{appTitle}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-display font-bold tracking-tight text-slate-900 dark:text-white">{appTitle}</h1>
+                {appVersion && (
+                  <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-md border border-slate-200/50 dark:border-slate-800 leading-none shrink-0" title="Deployment version">
+                    {appVersion}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-400 font-medium">{appSubtitle}</p>
             </div>
           </div>
